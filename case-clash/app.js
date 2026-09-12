@@ -24,7 +24,7 @@ function taskRows(){return [{id:'opens',label:'Открой 3 кейса',v:stat
 function render(){
  $('#caseRow').innerHTML=cases.map((c,i)=>`<button class="caseCard" onclick="openCase('${c[0]}',${c[2]})"><h3>${c[0]}</h3>${caseArt(i)}<div class="price">${coin} ${c[2]}</div></button>`).join('');
  $('#dropRow').innerHTML=skins.map((s,i)=>`<button class="drop ${[3,5].includes(i)?'gold':[1,6].includes(i)?'red':[2,7].includes(i)?'blue':''}" onclick="skinInfo(${i})">${weapon(i)}<b>${s[0]}</b><small>${s[1]}</small><div class="value">₽ ${fmt(s[3])}</div></button>`).join('');
- const nav=['home','case','battle','upgrade','contract','shop','tasks','refs','top','support'];$$('.sideNav .ic').forEach((el,i)=>el.innerHTML=icon(nav[i]));$$('.topNav .ni').forEach((el,i)=>el.innerHTML=icon(['case','upgrade','battle','contract','event'][i]));
+ $$('.sideNav .ic').forEach((el,i)=>{el.style.backgroundPosition='-24px -'+[120,167,214,261,308,355,402,449,496,543][i]+'px';});const nav=['home','case','battle','upgrade','contract','shop','tasks','refs','top','support'];$$('.sideNav .ic').forEach((el,i)=>el.innerHTML=icon(nav[i]));$$('.topNav .ni').forEach((el,i)=>el.innerHTML=icon(['case','upgrade','battle','contract','event'][i]));
  $('.topNav button').setAttribute('onclick',"showPanel('cases')");
  $('.daily').innerHTML=icon('gift')+'<b>Ежедневные<br>награды</b><div class="time" id="dailyTime"></div>';$('.daily').setAttribute('onclick','dailyReward()');asButton($('.daily'),'Ежедневная награда');
  $('.chip.p').innerHTML=icon('gem')+' <span id="gemTop"></span><span class="plus">+</span>';$('.chip.g').innerHTML=coin+' <span id="coinTop"></span><span class="plus">+</span>';
@@ -38,7 +38,7 @@ function render(){
  $$('.infoCard h3').forEach((h,i)=>{h.innerHTML=icon(['battle','tasks','refs'][i])+['СОБЫТИЯ','ЗАДАНИЯ','РЕФЕРАЛЫ'][i];});
  const tasks=$$('.infoCard')[1];tasks.querySelectorAll('.task').forEach(e=>e.remove());tasks.insertAdjacentHTML('beforeend','<div class="tasks-home" id="tasksHome"></div>');
  $('.copy').innerHTML=icon('copy');$('.copy').setAttribute('aria-label','Скопировать приглашение');
- $$('.stat .si').forEach((el,i)=>el.innerHTML=icon(['refs','case','crown','coin'][i]));
+ $$('.stat .si').forEach((el,i)=>el.innerHTML=sprite([27,264,524,781][i],1376,48,49));
  $('.footer').innerHTML=`<div class="footerLogo">CASE CLASH</div><div class="footerLinks">© 2026 Case Clash. Все права защищены.<br><button onclick="showPanel('terms')">Пользовательское соглашение</button>　<button onclick="showPanel('privacy')">Политика конфиденциальности</button><br><span class="demo-label">Демо · виртуальные предметы · без ставок и вывода</span></div><div class="social">${['send','play','music','chat'].map((n,i)=>`<button aria-label="${['Telegram','YouTube','TikTok','Discord'][i]}" onclick="showSocial('${['Telegram','YouTube','TikTok','Discord'][i]}')">${icon(n)}</button>`).join('')}<button class="lang" onclick="showPanel('language')">RU⌄</button></div>`;
  $('#modal').setAttribute('role','dialog');$('#modal').setAttribute('aria-modal','true');$('#modal').setAttribute('aria-labelledby','modalTitle');$('.x').setAttribute('aria-label','Закрыть');$('#toast').setAttribute('role','status');sync();resize();
 }
