@@ -8,3 +8,43 @@
 @keyframes legendaryArrival{0%{filter:brightness(2.5);transform:translateY(15px)}100%{filter:brightness(1);transform:none}}
 @media(max-width:767px){.top{padding-left:12px;padding-right:12px}.mobileLogo{width:94px!important;min-width:94px!important;background-size:94px auto!important}.wallets{gap:6px!important}.chip.p{display:flex!important}.chip{padding:8px 6px!important;min-height:44px;gap:4px;font-size:12px!important}.chip svg{width:15px!important;height:15px!important}.chip .plus{font-size:14px}.top .bell{display:none}.profile .avatar{width:34px;height:34px}.top .profile{min-width:34px}.playerChip{font-size:13px;gap:6px}.rankRow{grid-template-columns:28px minmax(0,1fr) auto;padding:14px 0;font-size:13px}.rankRow small{margin-left:42px}.rankRow .playerChip b{font-size:12px}.rankRow strong{font-size:12px}.place .playerChip b{font-size:12px}.myRank{top:66px}.infoCard .missionRow{flex-wrap:nowrap}.modalBox:has(.sceneShell){padding-bottom:calc(96px + env(safe-area-inset-bottom))}.immersive .modalBox:has(.sceneShell){padding-bottom:max(22px,env(safe-area-inset-bottom))}.modal:has(.sceneShell)~.mobileNav{z-index:60}.immersive .mobileNav{display:none!important}.modal:has(.sceneShell) .modalTop{gap:8px}.modalBox:has(.sceneShell) #modalTitle{font-size:15px;letter-spacing:.045em;flex:1;min-width:0;overflow-wrap:anywhere}.sheetBack{width:44px;min-width:44px;height:44px}.roster{gap:10px}.battleDrop{overflow-wrap:anywhere}.dailyGrid .daySeven{grid-column:1/-1}.sceneShell .btn,.missionRow .btn{font-size:14px}.sceneWallet{font-size:12px}.sceneWallet b{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.rarity-legendary{animation:none}}
+
+
+/* Upgrade terminal: one game surface, independently scrolling item libraries. */
+.upgradeTerminal{--metal:#1c1d28;max-width:1120px;margin:auto}
+.terminalHeading{text-align:left;padding:24px 0 12px;border-bottom:1px solid #302b3c}
+.terminalHeading h2{font-family:ClashDisplay,Impact,sans-serif;font-size:clamp(26px,4vw,42px);margin:10px 0}
+.terminalHeading p{color:#a9a0b8;font-size:14px;max-width:700px}
+.upgradeMain{display:grid;grid-template-columns:minmax(0,1fr) 290px minmax(0,1fr);align-items:center;gap:24px;padding:32px 0}
+.upgradeHeroItem{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-width:0;min-height:290px;width:100%;border:1px solid #33323c;border-bottom:3px solid #625174;border-radius:16px;background:radial-gradient(ellipse at 50% 35%,#593a662b,transparent 70%),linear-gradient(160deg,#202029,#0d0e14);color:#eee;padding:22px 14px;text-align:center}
+.upgradeHeroItem.selected{background:radial-gradient(ellipse at 50% 35%,#785c832b,transparent 70%),linear-gradient(160deg,#25242c,#101117)!important}
+.upgradeHeroItem>.weaponArt{transform:scale(1.7);margin:40px 0;max-width:100%}
+.upgradeHeroItem b{font-size:20px}.upgradeHeroItem>span:not(.eyebrow){font-size:16px}.upgradeHeroItem small{font-size:12px}.upgradeHeroItem strong{font-size:19px;color:#e5c68a}.itemSlot{display:grid;place-items:center;width:90px;height:90px}.itemSlot svg{width:52px;height:52px;color:#a998b9}
+.upgradeCenter{display:grid;justify-items:center;gap:18px}.terminalRing{width:260px;height:260px;box-shadow:0 0 0 7px #1c1a24,0 0 0 9px #49414e,0 20px 50px #0009,0 0 50px #8351a522;position:relative}
+.terminalRing strong{font-size:54px;font-variant-numeric:tabular-nums;letter-spacing:-.04em}.terminalRing strong small{font-size:26px}.terminalRing>span{font-size:12px;letter-spacing:.09em}
+.upgradeCenter>.btn{width:100%;min-height:56px}.upgradeMargin{font-size:12px;color:#a49aad}.upgradeTabs{display:none}
+.upgradeSelectors{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;margin-top:16px}
+.upgradeSelector{min-width:0;padding:18px;border:1px solid #2f2c37;border-radius:14px;background:#101117;scroll-margin-top:90px}
+.selectorHeading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.selectorHeading h3{font-size:15px;margin:0}.selectorHeading small{font-size:12px;color:#b6a68d;text-align:right}
+.upgradeTools{display:grid;gap:10px}.upgradeTools>div{display:grid;grid-template-columns:1fr 1fr;gap:10px}.upgradeTools input,.upgradeTools select{width:100%;min-width:0;min-height:44px;font-size:14px}
+.upgradeList{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px;max-height:520px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#685376 #12121b}
+.upgradePick{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0;color:#eee;border:1px solid #35303d;border-top:2px solid var(--rarity);border-radius:10px;background:#191922;padding:12px 8px;text-align:center}
+.upgradePick .weaponArt{height:80px;max-width:100%;margin:5px 0}.upgradePick b{font-size:14px}.upgradePick>span:not(.weaponArt){font-size:13px}.upgradePick small{color:var(--rarity);font-size:11px}.upgradePick strong{font-size:13px;color:#e4cba0}
+.upgradePick.selected{outline:2px solid #d4b87f;outline-offset:-2px}.upgradePick:hover{background:#252331}
+.selectorHint,.upgradeList>.empty{grid-column:1/-1;font-size:14px;color:#b9a9c7}
+.upgradeVerdict{padding:24px;margin:22px 0;border-left:3px solid #bfa276;background:linear-gradient(90deg,#55442a33,transparent);scroll-margin-top:90px}.upgradeVerdict h3{font-size:24px;margin:12px 0}.upgradeVerdict p{font-size:14px}.upgradeVerdict .btn{margin:6px 8px 0 0}.upgradeWon{border-color:#eac982;animation:legendaryArrival .65s ease-out}.upgradeLost{border-color:#b16d88;background:linear-gradient(90deg,#64334822,transparent)}
+.isRunning .upgradeHeroItem,.isRunning .upgradeTabs,.isRunning .upgradeSelectors{pointer-events:none;opacity:.55}
+.botIdentity{border:0;background:none;color:inherit;text-align:inherit;padding:0;min-height:44px;cursor:pointer}.botIdentity>small{display:block;color:#9d91aa;font-size:12px;margin:5px 0 0 44px}
+@media(max-width:767px){
+ .terminalHeading{padding:16px 0 8px}.terminalHeading h2{font-size:26px}.terminalHeading p{font-size:14px}
+ .upgradeMain{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 12px;padding:24px 0 16px}
+ .upgradeCenter{grid-row:1;grid-column:1/-1;gap:16px;width:100%;max-width:330px;justify-self:center}
+ .terminalRing{width:200px;height:200px}.terminalRing strong{font-size:44px}.terminalRing strong small{font-size:22px}
+ .upgradeHeroItem{min-height:230px;padding:18px 8px;gap:8px}.upgradeHeroItem>.weaponArt{transform:scale(1.12);margin:16px 0;height:80px}
+ .upgradeHeroItem b{font-size:16px}.upgradeHeroItem .eyebrow{font-size:12px;letter-spacing:.06em}.upgradeHeroItem>span:not(.eyebrow){font-size:14px}.upgradeHeroItem strong{font-size:15px}.upgradeHeroItem small{font-size:12px}
+ .upgradeTabs{display:flex;gap:10px;margin:12px 0}.upgradeTabs .btn{flex:1;min-height:48px}
+ .upgradeSelectors{display:block;margin-top:0}.upgradeSelector{display:none;padding:14px}.upgradeSelector.active{display:block}
+ .upgradeList{grid-template-columns:repeat(2,minmax(0,1fr));max-height:520px}.selectorHeading{align-items:flex-start}.selectorHeading h3{font-size:14px}.selectorHeading small{font-size:12px}
+ .upgradePick{min-height:180px}.upgradePick b{font-size:14px}.upgradePick strong{font-size:14px}.upgradePick>span:not(.weaponArt){font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){.upgradeWon{animation:none}}

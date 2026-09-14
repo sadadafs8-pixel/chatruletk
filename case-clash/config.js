@@ -1,6 +1,6 @@
 'use strict';
 const CONFIG = Object.freeze({
-  key:'caseclash.v4', season:'FOUNDERS', passXP:100, battleCost:49, rounds:3,
+  key:'caseclash.v4', season:'FOUNDERS', passXP:100, upgrade:Object.freeze({margin:0.8,maxChance:0.9,animationMs:1400}), battleCost:49, rounds:3,
   gems:[{id:'g80',gems:80,price:99},{id:'g250',gems:250,price:299},{id:'g550',gems:550,price:599,label:'MOST POPULAR'},{id:'g1200',gems:1200,price:1190},{id:'g2600',gems:2600,price:2490,label:'BEST VALUE'}],
   premium:[{id:'monthly',name:'Premium Monthly',price:299,days:30},{id:'yearly',name:'Premium Yearly',price:1990,days:365}],
   pass:{id:'pass',name:'Premium Battle Pass',price:399},
