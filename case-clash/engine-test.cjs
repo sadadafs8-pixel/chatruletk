@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
 const memory=new Map();const context={console,crypto:require('crypto').webcrypto,structuredClone,Date,Math,Uint32Array,setTimeout,clearTimeout,setInterval,clearInterval,navigator:{},localStorage:{getItem:k=>memory.get(k)||null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)},document:{querySelector:()=>({addEventListener(){}}),addEventListener(){}},window:{addEventListener(){}},assert};
 vm.createContext(context);
-const source=fs.readFileSync(__dirname+'/app.js','utf8')+'\n'+fs.readFileSync(__dirname+'/game.js','utf8').replace('finishInit();','');
+const source=fs.readFileSync(__dirname+'/app.js','utf8')+'\n'+fs.readFileSync(__dirname+'/config.js','utf8')+'\n'+fs.readFileSync(__dirname+'/services.js','utf8')+'\n'+fs.readFileSync(__dirname+'/game.js','utf8').replace('finishInit();','');
 vm.runInContext(source,context);
 vm.runInContext(`sync=()=>{};toastMsg=()=>{};passPage=()=>{};dailyReward=()=>{};missionPage=()=>{};
 (async()=>{
