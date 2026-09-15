@@ -48,3 +48,13 @@
  .upgradePick{min-height:180px}.upgradePick b{font-size:14px}.upgradePick strong{font-size:14px}.upgradePick>span:not(.weaponArt){font-size:14px}
 }
 @media(prefers-reduced-motion:reduce){.upgradeWon{animation:none}}
+.avatarBig[data-frame="VIOLET FRAME"]{border-color:#c18fff;box-shadow:0 0 28px #ab68ee55}.avatarBig[data-frame="SILVER FRAME"]{border-color:#dae4f2;box-shadow:0 0 28px #c4d1ed33}.avatarBig[data-frame="GOLD FRAME"],.avatarBig[data-frame="PREMIUM FRAME"]{border-color:#f0cb7a}.avatarBig[data-frame="WEEKLY FRAME"]{border-color:#edbbff;box-shadow:0 0 28px #dd95f755}
+
+/* The fixed success arc and rotating pointer share the same pre-animation roll. */
+.terminalRing{isolation:isolate;background:conic-gradient(from var(--arc-start),#e9c55e 0,var(--chance),#303039 var(--chance),#303039 100%);border:0;overflow:visible}
+.terminalRing:before{content:"";position:absolute;inset:16px;border-radius:50%;background:radial-gradient(circle at 50% 65%,#2a2432,#111219 72%);box-shadow:inset 0 0 0 1px #50414a;z-index:-1}
+.terminalRing strong,.terminalRing>span{position:relative;z-index:2;pointer-events:none}
+.upgradeNeedle{position:absolute;inset:-14px;z-index:3;pointer-events:none;transform:rotate(180deg)}
+.upgradeNeedle i{position:absolute;left:calc(50% - 8px);top:0;width:16px;height:32px;background:linear-gradient(#fff2c1,#dca43e);clip-path:polygon(0 0,50% 25%,100% 0,50% 100%);filter:drop-shadow(0 0 8px #efbc58)}
+.isRunning .terminalRing{box-shadow:0 0 0 7px #1c1a24,0 0 0 9px #695541,0 0 65px #c3933730}
+@media(max-width:767px){.terminalHeading h2{font-size:23px;margin:6px 0}.terminalHeading p{margin:6px 0;font-size:12px}.upgradeMain{gap:18px 10px;padding-top:26px}.upgradeCenter{gap:14px}.terminalRing{width:210px;height:210px}.upgradeHeroItem{min-height:176px;padding:12px 6px}.upgradeHeroItem>.weaponArt{margin:4px 0;height:60px}.upgradeHeroItem b{font-size:14px}.upgradeHeroItem>span:not(.eyebrow){font-size:12px}.upgradeMargin{font-size:11px}}
