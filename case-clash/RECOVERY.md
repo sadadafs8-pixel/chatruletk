@@ -6,6 +6,17 @@ Upgrade implementation is in game.js / game.css; formula and animation duration 
 
 Upgrade now has a fullscreen source/ring/target terminal, two desktop selectors, mobile MY ITEMS / TARGETS tabs, search, rarity/value filters and selected cards. The gold success arc has the exact displayed probability. One uniform RNG sample is drawn before animation and determines both success and pointer landing. The ring stays still; the pointer rotates and slows, then its result remains visible. Source is consumed once on both outcomes. The busy guard prevents replay. Result, inventory, NW, XP, missions and pass progress use the shared persisted state.
 
+## Premium visual pass v3
+
+The latest visual layer is `case-clash/premium-v3.css`. It is additive and deliberately leaves RNG, economy and persistence logic untouched. `scripts/sync-case-clash.py` now appends this file after `game.css`, so future canonical bundle syncs keep the new styling.
+
+The pass removes the oversized card-in-card look and brings Case Opening, Upgrade, Case Battle, Spin & Win, Store, Leaderboard/Profile and supporting fullscreen scenes into one compact dark terminal language. Upgrade is intentionally the strongest scene: source / probability / target stay on one surface, the probability ring is reduced and sharpened, the pointer is a prominent physical arrow, selectors are denser, and mobile keeps MY ITEM -> RING -> TARGET on one row with touch selectors below.
+
+Immediate visual QA entry point without rebuilding the historical bundled index:
+https://htmlpreview.github.io/?https://github.com/sadadafs8-pixel/chatruletk/blob/case-clash-demo/case-clash/preview-v3.html
+
+`preview-v3.html` loads the current canonical game and injects `premium-v3.css` only. It exists as a QA bridge; after running `scripts/sync-case-clash.py`, the same visual layer is embedded into canonical `index.html` and the wrapper is no longer required for release testing.
+
 ## Verification evidence
 
 Game revision personally opened: 38711eda2c2ce5d9c19518de30f9e26a00a4d851.
@@ -24,7 +35,7 @@ Mobile iframe fixture at revision 1e43893192488186f29b258a87e1aca6648316bc rende
 
 Production work remains backend authority, real payment and rewarded-ad providers, and production content. No real money integration or cash-out is enabled.
 
-Public test URL:
+Previous exact tested canonical revision URL:
 https://htmlpreview.github.io/?https://github.com/sadadafs8-pixel/chatruletk/blob/38711eda2c2ce5d9c19518de30f9e26a00a4d851/case-clash/index.html
 
-The existing deployment mechanism is a public HTML preview of committed code. Use the exact revision URL to avoid stale branch caching. Browser state belongs to the preview origin; use a dedicated origin when deploying a production service.
+The existing deployment mechanism is a public HTML preview of committed code. Browser state belongs to the preview origin; use a dedicated origin when deploying a production service.
