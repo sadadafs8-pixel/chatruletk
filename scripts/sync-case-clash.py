@@ -3,7 +3,7 @@ import html,re
 root=Path(__file__).resolve().parents[1]/'case-clash'
 p=root/'index.html';s=p.read_text()
 s=re.sub(r'<style id="mobile-responsive">.*?</style>','',s,flags=re.S)
-s=s.replace('</head>','<style id="mobile-responsive">'+(root/'mobile.css').read_text()+'\n'+(root/'game.css').read_text()+'</style></head>')
+s=s.replace('</head>','<style id="mobile-responsive">'+(root/'mobile.css').read_text()+'\n'+(root/'game.css').read_text()+'\n'+(root/'premium-v3.css').read_text()+'</style></head>')
 s=re.sub(r'<script>.*?</script>',lambda m:'<script>'+ (root/'app.js').read_text()+'\n'+(root/'config.js').read_text()+'\n'+(root/'services.js').read_text()+'\n'+(root/'game.js').read_text()+'</script>',s,flags=re.S)
 p.write_text(s)
 for w,h in [(390,844),(393,852),(430,932)]:
