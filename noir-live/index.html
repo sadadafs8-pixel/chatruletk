@@ -109,6 +109,14 @@ button{color:inherit;cursor:pointer}
 .device.active{border-color:rgba(223,189,121,.55);background:#17140f}
 .toast{position:fixed;z-index:100;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:rgba(20,20,20,.92);border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-size:12px;opacity:0;pointer-events:none;transition:.18s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
+.searchOverlay{position:absolute;inset:0;z-index:55;display:none;align-items:center;justify-content:center;background:rgba(5,5,5,.92);backdrop-filter:blur(16px)}
+.searchOverlay.show{display:flex}
+.searchBox{text-align:center;padding:28px 24px}
+.searchTitle{font-size:20px;font-weight:850;letter-spacing:.01em}
+.searchDots{display:flex;justify-content:center;gap:7px;margin-top:17px}
+.searchDots i{width:7px;height:7px;border-radius:50%;background:#dfbd79;animation:searchPulse 1s infinite ease-in-out}
+.searchDots i:nth-child(2){animation-delay:.16s}.searchDots i:nth-child(3){animation-delay:.32s}
+@keyframes searchPulse{0%,80%,100%{opacity:.2;transform:scale(.75)}40%{opacity:1;transform:scale(1.15)}}
 </style>
 </head>
 <body>
@@ -174,6 +182,13 @@ button{color:inherit;cursor:pointer}
     <button id="chatToggle" class="ctl" type="button" aria-label="Чат"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4Z"/></svg></button>
     <button id="next" class="ctl next" type="button" aria-label="Следующий"><svg viewBox="0 0 24 24"><path d="M5 12h13M14 7l5 5-5 5"/></svg></button>
     <button id="end" class="ctl end" type="button" aria-label="Выйти"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+  </div>
+
+  <div id="searchOverlay" class="searchOverlay">
+    <div class="searchBox">
+      <div class="searchTitle">Ищем собеседника…</div>
+      <div class="searchDots"><i></i><i></i><i></i></div>
+    </div>
   </div>
 
   <div id="chat" class="chat">
@@ -244,6 +259,18 @@ function setBot(i,voice){
  qs('#messages').innerHTML='';addMsg(current.intro,'bot');if(voice!==false)speak(current.intro)
 }
 setBot(0,false);
+
+var searchTimer=null;
+function findNextBot(nextIndex,voice){
+ var o=qs('#searchOverlay');
+ o.classList.add('show');
+ try{speechSynthesis.cancel()}catch(e){}
+ clearTimeout(searchTimer);
+ searchTimer=setTimeout(function(){
+  setBot(nextIndex,voice);
+  o.classList.remove('show');
+ },900+Math.floor(Math.random()*700));
+}
 
 var stream=null,facing='user',micOn=true,camOn=true,devices=[],deviceId=null,currentLabel='';
 var video=qs('#selfVideo'),fallback=qs('#pipFallback'),pip=qs('#pip');
@@ -348,12 +375,19 @@ async function switchCamera(){
 qs('#start').onclick=function(){
  if(!qs('#age').checked){toast('Подтверди, что тебе есть 18');return}
  refreshBotPool();
- show('room');setBot(0,false);
- startCamera({facing:facing}).then(function(ok){if(ok)setTimeout(function(){speak(current.intro)},150)});
+ show('room');
+ qs('#searchOverlay').classList.add('show');
+ startCamera({facing:facing});
+ clearTimeout(searchTimer);
+ searchTimer=setTimeout(function(){
+  setBot(0,false);
+  qs('#searchOverlay').classList.remove('show');
+  setTimeout(function(){speak(current.intro)},160);
+ },950+Math.floor(Math.random()*650));
 };
-qs('#end').onclick=function(){stopStream();qs('#chat').classList.remove('open');show('entry')};
-qs('#next').onclick=function(){try{speechSynthesis.cancel()}catch(e){}setBot(botIndex+1,true);toast('Следующий')};
-qs('#report').onclick=function(){toast('Жалоба отправлена');setTimeout(function(){setBot(botIndex+1,true)},350)};
+qs('#end').onclick=function(){clearTimeout(searchTimer);qs('#searchOverlay').classList.remove('show');stopStream();qs('#chat').classList.remove('open');show('entry')};
+qs('#next').onclick=function(){findNextBot(botIndex+1,true)};
+qs('#report').onclick=function(){toast('Жалоба отправлена');setTimeout(function(){findNextBot(botIndex+1,true)},250)};
 qs('#mute').onclick=function(){micOn=!micOn;if(stream)stream.getAudioTracks().forEach(function(t){t.enabled=micOn});this.classList.toggle('off',!micOn);toast(micOn?'Микрофон включён':'Микрофон выключен')};
 qs('#camera').onclick=async function(){camOn=!camOn;if(!stream&&camOn)await startCamera({facing:facing});if(stream)stream.getVideoTracks().forEach(function(t){t.enabled=camOn});this.classList.toggle('off',!camOn);if(!camOn)camText('Камера выключена');else if(stream)camReady()};
 qs('#switch').onclick=switchCamera;
