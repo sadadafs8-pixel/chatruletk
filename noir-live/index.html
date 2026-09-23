@@ -188,7 +188,7 @@ button{color:inherit;cursor:pointer}
 
   <div id="searchOverlay" class="searchOverlay">
     <div class="searchBox">
-      <div class="searchTitle">Ищем собеседницу…</div>
+      <div class="searchTitle">Ищем собеседницу…</div><div style="margin-top:10px;color:#77716b;font-size:11px">DEMO MATCH POOL</div>
       <div class="searchDots"><i></i><i></i><i></i></div>
     </div>
   </div>
@@ -219,29 +219,81 @@ function show(id){qsa('.screen').forEach(function(x){x.classList.toggle('active'
 var toastTimer;
 function toast(t){var e=qs('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){e.classList.remove('show')},1800)}
 
-var femaleBots=[
- {name:'Mila',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-an-influencer-talking-to-the-camera-42323-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет :)',replies:['Как настроение?','Расскажи о себе :)','Интересно','Что ещё?']},
- {name:'Eva',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-girl-on-a-video-call-with-her-friends-4706-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хей 👋',replies:['Как день прошёл?','Поняла :)','Прикольно','Продолжай']},
- {name:'Sofia',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-girl-on-a-terrace-having-a-video-call-39799-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет!',replies:['А ты откуда?','Ага :)','Расскажи ещё','Интересно']},
- {name:'Lina',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-artist-on-a-video-call-5169-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет :)',replies:['Чем занимаешься?','Ого','Поняла','И дальше?']},
- {name:'Alina',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-girl-in-the-middle-of-a-video-call-on-her-bed-41195-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хай',replies:['Как вечер?','Мило :)','А ещё?','Слушаю']},
- {name:'Kira',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-girl-on-a-video-call-standing-on-a-balcony-at-sunset-10440-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет 👋',replies:['Прикольно','Серьёзно?','Поняла','Продолжай']},
- {name:'Mia',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-young-woman-talking-on-video-call-on-a-terrace-10442-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хей :)',replies:['Как настроение?','Хм :)','Рассказывай','Окей']},
- {name:'Diana',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-girl-on-a-video-call-while-drinking-coffee-39812-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет!',replies:['Ага','Интересно :)','Что потом?','Продолжай']},
- {name:'Vika',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-excited-girl-talking-on-video-call-with-her-cell-phone-8745-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Приветик',replies:['Ого :)','А ты?','Поняла','Расскажи ещё']},
- {name:'Nora',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-young-woman-talking-on-video-call-lying-on-her-bed-10447-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хей 👋',replies:['Как дела?','Ясно :)','Интересно','Что ещё?']},
- {name:'Kate',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-woman-chatting-on-video-call-with-her-cell-phone-10444-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет :)',replies:['Слушаю','Поняла тебя','Прикольно','А дальше?']},
- {name:'Maya',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-young-woman-having-a-video-call-by-tablet-41202-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет!',replies:['Хорошо :)','Ага','Расскажи подробнее','Окей']},
- {name:'Anna',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-young-woman-on-a-video-call-lying-on-a-bed-41197-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хай :)',replies:['Как у тебя вечер?','Мило','Продолжай','Интересно']},
- {name:'Polina',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-young-female-employee-having-a-video-call-with-a-client-4844-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет 👋',replies:['Чем занимаешься?','Поняла :)','А ещё?','Слушаю']},
- {name:'Lera',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-woman-laughing-out-loud-during-a-video-call-10449-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хей!',replies:['Ахах :)','Ого','И что потом?','Продолжай']},
- {name:'Arina',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-laughing-girl-talking-on-a-video-call-39814-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет :)',replies:['Прикольно :)','А ты?','Что ещё?','Поняла']},
- {name:'Bella',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-face-of-a-woman-modeling-at-the-camera-51291-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хей',replies:['Расскажи о себе','Интересно','Хм :)','Продолжай']},
- {name:'Elena',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-therapist-in-his-office-talking-to-the-camera-4834-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет!',replies:['Как день?','Поняла','А дальше?','Слушаю']},
- {name:'Lisa',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-girl-listening-to-her-friend-12132-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет :)',replies:['Ага :)','Рассказывай','Прикольно','Что ещё?']},
- {name:'Tina',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-face-of-a-woman-taking-pictures-with-a-camera-44108-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хай 👋',replies:['Окей :)','Интересно','А ты?','Продолжай']},
- {name:'Yana',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-taking-a-photo-with-a-camera-44109-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет!',replies:['Как настроение?','Ясно :)','Расскажи ещё','Поняла']}
+var sourceVideos=[
+ 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-captivating-young-woman-41622-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-woman-posing-for-the-camera-in-the-middle-of-a-desert-34404-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-face-of-a-woman-modeling-at-the-camera-51291-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-indian-model-posing-confidently-101445-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-model-looking-captivating-at-the-camera-34400-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-captivating-young-woman-wearing-sunglasses-39981-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-beautiful-indian-model-posing-101456-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-captivating-model-in-a-colorful-style-43577-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-young-woman-looking-captivating-into-the-lens-39680-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-young-woman-with-red-lips-smiling-to-the-camera-51656-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-couple-of-urban-models-posing-for-the-camera-42303-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-beautiful-model-with-indian-features-101444-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-portrait-shot-of-indian-model-101451-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-two-stylish-friends-incarcerated-after-a-night-out-42294-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-captivating-girl-dancing-artistically-into-the-lens-51292-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-a-mystery-woman-wearing-a-leather-jacket-in-futuristic-neon-cityscape-posing-to-the-camera-99885-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-urban-models-posing-next-to-a-vehicle-43184-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-two-young-women-in-an-old-sports-car-43277-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-moving-her-hair-in-slow-motion-41617-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-a-young-model-wearing-an-all-white-attire-strike-a-gaze-to-the-camera-gently-moving-her-veil-to-the-side-52275-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-a-woman-smiling-happily-at-the-camera-43830-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-face-of-a-woman-during-a-phone-call-49920-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-face-of-a-woman-having-a-video-call-outdoors-39802-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-woman-chatting-on-video-call-with-her-cell-phone-10444-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-woman-taking-a-selfie-in-the-morning-41181-large.mp4',
+ 'https://assets.mixkit.co/videos/preview/mixkit-woman-smiling-at-the-camera-outdoors-2705-large.mp4'
 ];
+
+var fallbackVideos=[
+ 'https://user-images.githubusercontent.com/37614046/211446105-e70e4523-01e3-41f1-922d-ed2d8c614900.mp4',
+ 'https://user-images.githubusercontent.com/35351230/200015161-ebbbc949-2c4e-407c-b0fa-044242b40ede.mp4',
+ 'https://user-images.githubusercontent.com/35351230/200014913-c9d21aea-85ab-4c65-8c92-8fdd6e288d2b.mp4',
+ 'https://user-images.githubusercontent.com/35351230/200084486-24bc31c6-441f-495e-997c-9334a1315dd6.mp4',
+ 'https://www.skyreels.ai/videos/TalkingAvatar/1.mp4',
+ 'https://www.skyreels.ai/videos/ReferencetoVideo/1.mp4'
+];
+
+var girlNames=['Mila','Eva','Sofia','Lina','Alina','Kira','Mia','Diana','Vika','Nora','Kate','Maya','Anna','Polina','Lera','Arina','Bella','Elena','Lisa','Tina','Yana','Adele','Lana','Alice','Emma','Nika','Karina','Marta','Olivia','Amelia','Sara','Laura','Mira','Nicole','Monica','Emily','Victoria','Valerie','Selena','Camila','Ariana','Naomi','Chloe','Zoe','Julia','Daria','Anya','Elisa','Megan','Stella','Nina','Ava','Sophia','Lily','Molly','Ruby','Iris','Leah','Ella','Grace','Maya','Mila','Lina','Nora','Lana','Eva','Sofia','Kira','Mia','Diana','Vika','Kate','Anna','Arina','Bella','Lisa','Tina','Yana','Adele','Alice','Emma','Nicole','Emily','Stella','Ava','Lily','Ruby','Iris','Ella','Grace','Naomi','Chloe','Zoe','Julia','Elisa','Megan','Olivia','Amelia','Camila','Valerie','Selena','Monica','Laura','Mira','Marta','Karina','Nika','Polina','Lera','Victoria','Ariana','Sarah','Leona','Bianca','Demi','Kylie','Hailey','Sabrina','Lola','Margo','Vera','Nelly','Rina','Cleo','Tessa','Alya','Elina'];
+
+function seededShuffle(arr,seed){
+ var a=arr.slice(),s=seed||1234567;
+ function rnd(){s=(s*1664525+1013904223)>>>0;return s/4294967296}
+ for(var i=a.length-1;i>0;i--){var j=Math.floor(rnd()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}
+ return a
+}
+function buildFemaleBots(){
+ var out=[],nameIndex=0,lastSource=-1;
+ for(var round=0;round<5;round++){
+   var ids=sourceVideos.map(function(_,i){return i});
+   ids=seededShuffle(ids,9311+round*719);
+   if(ids.length>1&&ids[0]===lastSource){var z=ids[0];ids[0]=ids[1];ids[1]=z}
+   ids.forEach(function(srcIndex,j){
+     var variant=round;
+     var cropX=46+((srcIndex*7+variant*11)%9);
+     var cropY=43+((srcIndex*5+variant*3)%14);
+     var startRatio=((srcIndex*17+variant*23)%73)/100;
+     var rate=.94+(((srcIndex+variant*3)%9)*.01);
+     out.push({
+       name:girlNames[nameIndex%girlNames.length],
+       cls:['','bot2','bot3'][(srcIndex+variant)%3],
+       sourceIndex:srcIndex,
+       video:sourceVideos[srcIndex],
+       fallbackVideo:fallbackVideos[(srcIndex+variant)%fallbackVideos.length],
+       cropX:cropX,cropY:cropY,startRatio:startRatio,rate:rate,
+       intro:['Привет :)','Хей 👋','Привет!','Хай :)'][(srcIndex+variant)%4],
+       replies:['Расскажи о себе :)','Как настроение?','Интересно','А ты?','Продолжай','Что ещё?']
+     });
+     nameIndex++;
+     lastSource=srcIndex;
+   });
+ }
+ return out;
+}
+var femaleBots=buildFemaleBots();
 var maleBots=[];
 var bots=femaleBots.slice();
 function shuffleBots(arr){
@@ -250,7 +302,14 @@ function shuffleBots(arr){
  return a
 }
 function refreshBotPool(){
- bots=shuffleBots(femaleBots);
+ var shuffled=shuffleBots(femaleBots),ordered=[],pending=shuffled.slice(),last=-1,guard=0;
+ while(pending.length&&guard++<10000){
+   var pick=pending.findIndex(function(x){return x.sourceIndex!==last});
+   if(pick<0)pick=0;
+   var item=pending.splice(pick,1)[0];
+   ordered.push(item);last=item.sourceIndex;
+ }
+ bots=ordered;
  botIndex=0;current=bots[0];
 }
 var botIndex=0,current=bots[0];
@@ -283,14 +342,18 @@ function setBot(i,voice){
  scene.classList.remove('video-ok');
  try{pv.pause()}catch(e){}
  pv.removeAttribute('src');pv.load();
- var triedFallback=false;
+ var fallbackStep=0;
  function loadSrc(src){
    pv.src=src;pv.load();
  }
+ pv.style.objectPosition=(current.cropX||50)+'% '+(current.cropY||50)+'%';
  pv.onloadedmetadata=function(){
    try{
-     if(isFinite(pv.duration)&&pv.duration>3) pv.currentTime=Math.random()*Math.max(1,pv.duration-2);
-     pv.playbackRate=.96+Math.random()*.08;
+     if(isFinite(pv.duration)&&pv.duration>3){
+       var usable=Math.max(1,pv.duration-2);
+       pv.currentTime=Math.min(usable,Math.max(0,usable*(current.startRatio==null?Math.random():current.startRatio)));
+     }
+     pv.playbackRate=current.rate||1;
    }catch(e){}
  };
  pv.oncanplay=function(){
@@ -299,9 +362,12 @@ function setBot(i,voice){
    scheduleRemoteSkip();
  };
  pv.onerror=function(){
-   if(!triedFallback){
-     triedFallback=true;
+   if(fallbackStep===0){
+     fallbackStep=1;
      loadSrc(current.fallbackVideo);
+   }else if(fallbackStep===1){
+     fallbackStep=2;
+     loadSrc(fallbackVideos[(current.sourceIndex+3)%fallbackVideos.length]);
    }else{
      scene.classList.remove('video-ok');
      toast('Плохое соединение');
