@@ -4,7 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#050505">
-<title>NOIR</title>
+<title>NOIR — анонимный видеочат 18+</title>
+<meta name="description" content="NOIR — бесплатный анонимный видеочат 18+ со случайным подбором собеседников. Быстрый старт в браузере, без установки приложения.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="canonical" href="https://raw.githack.com/sadadafs8-pixel/chatruletk/noir-live-demo/noir-live/">
+<link rel="manifest" href="site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NOIR — анонимный видеочат 18+">
+<meta property="og:description" content="Случайный видеочат 18+ прямо в браузере. Без установки приложения.">
+<meta property="og:url" content="https://raw.githack.com/sadadafs8-pixel/chatruletk/noir-live-demo/noir-live/">
+<meta property="og:site_name" content="NOIR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NOIR — анонимный видеочат 18+">
+<meta name="twitter:description" content="Случайный видеочат 18+ прямо в браузере.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"NOIR","applicationCategory":"CommunicationApplication","operatingSystem":"Web","url":"https://raw.githack.com/sadadafs8-pixel/chatruletk/noir-live-demo/noir-live/","description":"Анонимный случайный видеочат 18+ в браузере.","isFamilyFriendly":false,"audience":{"@type":"PeopleAudience","suggestedMinAge":18}}
+</script>
 <style>
 :root{--bg:#050505;--panel:#101010;--line:rgba(255,255,255,.12);--text:#f5f1e9;--muted:#8b857d;--gold:#dfbd79;--gold2:#b68a4d;--danger:#6f2427}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -126,6 +142,7 @@ button{color:inherit;cursor:pointer}
 <section id="entry" class="screen entry active">
   <div class="entryBox">
     <div class="logo"><span class="logoDot"></span>NOIR</div>
+    <div style="text-align:center;color:#77716b;font-size:12px;line-height:1.45;margin:-42px 0 36px">Анонимный видеочат 18+ · без установки</div>
     <div class="label">Я</div>
     <div class="segment">
       <input class="pick" id="meM" type="radio" name="me" value="m"><label class="pickLabel" for="meM">Мужчина</label>
@@ -137,7 +154,7 @@ button{color:inherit;cursor:pointer}
       <input class="pick" id="findF" type="radio" name="find" value="f" checked>
       <label class="pickLabel" for="findF" style="grid-column:1/-1">Девушек</label>
     </div>
-    <label class="age"><input id="age" type="checkbox" checked><span>Мне есть 18 лет</span></label>
+    <label class="age"><input id="age" type="checkbox"><span>Мне есть 18 лет</span></label>
     <button id="start" class="start" type="button">Начать</button>
     <div class="hint">Камера включится после разрешения Safari</div>
   </div>
@@ -159,9 +176,13 @@ button{color:inherit;cursor:pointer}
 
   <div class="topbar">
     <div class="peerPill"><span class="live"></span><span id="botName">Mila</span><span class="demoTag">STOCK DEMO</span></div>
+    <div style="display:flex;gap:8px">
+    <button id="invite" class="smallBtn" type="button" aria-label="Пригласить">
+      <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0-4 4m4-4 4 4M5 13v6h14v-6"/></svg>
+    </button>
     <button id="report" class="smallBtn" type="button" aria-label="Жалоба">
       <svg viewBox="0 0 24 24"><path d="M6 21V4m0 1h11l-2 4 2 4H6"/></svg>
-    </button>
+    </button></div>
   </div>
 
   <div id="pip" class="pip">
@@ -218,6 +239,38 @@ function qsa(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
 function show(id){qsa('.screen').forEach(function(x){x.classList.toggle('active',x.id===id)})}
 var toastTimer;
 function toast(t){var e=qs('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){e.classList.remove('show')},1800)}
+
+var urlParams=new URLSearchParams(location.search);
+var incomingRef=(urlParams.get('ref')||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,32);
+if(incomingRef){try{localStorage.setItem('noir_ref_source',incomingRef)}catch(e){}}
+var utm={source:urlParams.get('utm_source')||'',medium:urlParams.get('utm_medium')||'',campaign:urlParams.get('utm_campaign')||''};
+function getMyRef(){
+ try{
+   var v=localStorage.getItem('noir_my_ref');
+   if(v)return v;
+   var bytes=new Uint8Array(5);
+   if(window.crypto&&crypto.getRandomValues)crypto.getRandomValues(bytes);
+   else for(var i=0;i<bytes.length;i++)bytes[i]=Math.floor(Math.random()*256);
+   v=Array.from(bytes).map(function(x){return x.toString(36)}).join('').slice(0,8).toUpperCase();
+   localStorage.setItem('noir_my_ref',v);return v;
+ }catch(e){return Math.random().toString(36).slice(2,10).toUpperCase()}
+}
+function trackEvent(name,data){
+ try{
+   var log=JSON.parse(localStorage.getItem('noir_events')||'[]');
+   log.push({name:name,ts:Date.now(),ref:incomingRef||localStorage.getItem('noir_ref_source')||'',utm:utm,data:data||{}});
+   if(log.length>100)log=log.slice(-100);
+   localStorage.setItem('noir_events',JSON.stringify(log));
+ }catch(e){}
+}
+function shareUrl(){
+ var u=new URL(location.href);u.search='';
+ u.searchParams.set('ref',getMyRef());
+ u.searchParams.set('utm_source','referral');
+ u.searchParams.set('utm_medium','share');
+ return u.toString();
+}
+trackEvent('page_view',{path:location.pathname});
 
 var sourceVideos=[
  'https://videos.pexels.com/video-files/6229474/6229474-uhd_2160_4096_25fps.mp4',
@@ -503,6 +556,7 @@ async function switchCamera(){
 
 qs('#start').onclick=function(){
  if(!qs('#age').checked){toast('Подтверди, что тебе есть 18');return}
+ trackEvent('chat_start',{});
  refreshBotPool();
  show('room');
  qs('#searchOverlay').classList.add('show');
@@ -515,8 +569,16 @@ qs('#start').onclick=function(){
  },900+Math.floor(Math.random()*1900));
 };
 qs('#end').onclick=function(){clearTimeout(remoteSkipTimer);clearTimeout(searchTimer);qs('#searchOverlay').classList.remove('show');stopStream();qs('#chat').classList.remove('open');show('entry')};
-qs('#next').onclick=function(){clearTimeout(remoteSkipTimer);findNextBot(botIndex+1,true)};
-qs('#report').onclick=function(){clearTimeout(remoteSkipTimer);toast('Жалоба отправлена');setTimeout(function(){findNextBot(botIndex+1,true)},250)};
+qs('#next').onclick=function(){trackEvent('next_match',{});clearTimeout(remoteSkipTimer);findNextBot(botIndex+1,true)};
+qs('#report').onclick=function(){trackEvent('report',{});clearTimeout(remoteSkipTimer);toast('Жалоба отправлена');setTimeout(function(){findNextBot(botIndex+1,true)},250)};
+qs('#invite').onclick=async function(){
+ var u=shareUrl();trackEvent('share_click',{url:u});
+ try{
+   if(navigator.share){await navigator.share({title:'NOIR',text:'Попробуй NOIR — случайный видеочат 18+',url:u});trackEvent('share_complete',{});}
+   else if(navigator.clipboard){await navigator.clipboard.writeText(u);toast('Ссылка скопирована');}
+   else{prompt('Скопируй ссылку',u);}
+ }catch(e){if(e&&e.name!=='AbortError')toast('Не удалось поделиться')}
+};
 qs('#mute').onclick=function(){micOn=!micOn;if(stream)stream.getAudioTracks().forEach(function(t){t.enabled=micOn});this.classList.toggle('off',!micOn);toast(micOn?'Микрофон включён':'Микрофон выключен')};
 qs('#camera').onclick=async function(){camOn=!camOn;if(!stream&&camOn)await startCamera({facing:facing});if(stream)stream.getVideoTracks().forEach(function(t){t.enabled=camOn});this.classList.toggle('off',!camOn);if(!camOn)camText('Камера выключена');else if(stream)camReady()};
 qs('#switch').onclick=switchCamera;
