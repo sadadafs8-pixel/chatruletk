@@ -53,6 +53,15 @@ button{color:inherit;cursor:pointer}
 @keyframes talk{to{height:17px;width:31px}}
 .bot2{--glow:rgba(117,59,56,.56);--b1:#251515;--skin1:#d1a17f;--skin2:#99634e;--hair:#171311;--shirt1:#251818;--shirt2:#090707;--lip:#7f4145}
 .bot3{--glow:rgba(54,76,106,.58);--b1:#121b2a;--skin1:#c79a7e;--skin2:#94634e;--hair:#302622;--shirt1:#151b26;--shirt2:#080b10;--lip:#75474c}
+.peerPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 34%;z-index:2;opacity:0;transform:scale(1.025);filter:saturate(.92) contrast(1.03) brightness(.92);transition:opacity .22s ease;animation:photoFloat 7s ease-in-out infinite alternate}
+.scene.photo-ok .peerPhoto{opacity:1}
+.scene.photo-ok .person{opacity:0}
+@keyframes photoFloat{to{transform:scale(1.055) translateY(-.8%)}}
+.cameraNoise{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;mix-blend-mode:soft-light;background-image:radial-gradient(rgba(255,255,255,.25) .45px,transparent .55px);background-size:3px 3px}
+.cameraStatus{font-size:12px;color:#9b958d;margin:0 2px 8px}
+.zoomRow{display:flex;gap:8px;overflow:auto;padding:2px 0 4px}
+.zoomBtn{min-width:62px;height:40px;border:1px solid var(--line);border-radius:13px;background:#0d0d0d;color:#d8d0c5;font-weight:800}
+.zoomBtn.active{border-color:rgba(223,189,121,.65);background:#1a160f;color:#f1d59d}
 .vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.18),transparent 23%,transparent 62%,rgba(0,0,0,.86))}
 .topbar{position:absolute;z-index:20;top:calc(14px + env(safe-area-inset-top));left:max(15px,env(safe-area-inset-left));right:max(15px,env(safe-area-inset-right));display:flex;align-items:center;justify-content:space-between}
 .peerPill{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(8,8,8,.52);backdrop-filter:blur(16px);font-size:13px}
@@ -127,6 +136,8 @@ button{color:inherit;cursor:pointer}
 <section id="room" class="screen room">
   <div class="peerStage">
     <div id="scene" class="scene">
+      <img id="peerPhoto" class="peerPhoto" alt="" referrerpolicy="no-referrer">
+      <div class="cameraNoise"></div>
       <div class="person">
         <div class="body"></div><div class="neck"></div><div class="head"></div><div class="hair"></div>
         <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
@@ -172,7 +183,9 @@ button{color:inherit;cursor:pointer}
 
   <div id="sheetBack" class="sheetBack">
     <div class="sheet">
-      <div class="sheetTop"><b>Камеры</b><button id="closeSheet" class="smallBtn" type="button">×</button></div>
+      <div class="sheetTop"><b>Камеры и объективы</b><button id="closeSheet" class="smallBtn" type="button">×</button></div>
+      <div id="cameraStatus" class="cameraStatus"></div>
+      <div id="zoomRow" class="zoomRow"></div>
       <div id="deviceList"></div>
     </div>
   </div>
@@ -190,9 +203,9 @@ var toastTimer;
 function toast(t){var e=qs('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){e.classList.remove('show')},1800)}
 
 var bots=[
- {name:'Mila',cls:'',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
- {name:'Sofia',cls:'bot2',intro:'Привет. Проверим, как работает чат?',replies:['Да, сообщение вижу.','Интерфейс почти не мешает разговору.','А ты бы пользовался такой рулеткой?','Окей, что ещё тестируем?']},
- {name:'Nora',cls:'bot3',intro:'Hey. Камера включилась?',replies:['Если видишь себя в окне — камера работает.','Окно можно двигать и растягивать.','Объективы открываются круглой кнопкой.','Нажми Next и проверь следующего бота.']}
+ {name:'Mila',cls:'',img:'https://api.samplefaces.com/face?width=900&height=1600&n=11',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
+ {name:'Sofia',cls:'bot2',img:'https://api.samplefaces.com/face?width=900&height=1600&n=24',intro:'Привет. Проверим, как работает чат?',replies:['Да, сообщение вижу.','Интерфейс почти не мешает разговору.','А ты бы пользовался такой рулеткой?','Окей, что ещё тестируем?']},
+ {name:'Nora',cls:'bot3',img:'https://api.samplefaces.com/face?width=900&height=1600&n=37',intro:'Hey. Камера включилась?',replies:['Если видишь себя в окне — камера работает.','Окно можно двигать и растягивать.','Объективы открываются круглой кнопкой.','Нажми Next и проверь следующего бота.']}
 ];
 var botIndex=0,current=bots[0];
 function addMsg(text,who){var d=document.createElement('div');d.className='bubble '+who;d.textContent=text;qs('#messages').appendChild(d);qs('#messages').scrollTop=qs('#messages').scrollHeight}
@@ -208,59 +221,114 @@ function speak(text){
 }
 function setBot(i,voice){
  botIndex=(i+bots.length)%bots.length;current=bots[botIndex];
- qs('#botName').textContent=current.name;qs('#scene').className='scene '+current.cls;
+ var scene=qs('#scene'),photo=qs('#peerPhoto');
+ qs('#botName').textContent=current.name;scene.className='scene '+current.cls;
+ scene.classList.remove('photo-ok');
+ photo.onload=function(){scene.classList.add('photo-ok')};
+ photo.onerror=function(){scene.classList.remove('photo-ok')};
+ photo.src=current.img+'&session='+botIndex;
  qs('#messages').innerHTML='';addMsg(current.intro,'bot');if(voice!==false)speak(current.intro)
 }
 setBot(0,false);
 
-var stream=null,facing='user',micOn=true,camOn=true,devices=[],deviceId=null;
+var stream=null,facing='user',micOn=true,camOn=true,devices=[],deviceId=null,currentLabel='';
 var video=qs('#selfVideo'),fallback=qs('#pipFallback'),pip=qs('#pip');
 function camText(t){fallback.textContent=t;fallback.classList.remove('hide')}
 function camReady(){fallback.classList.add('hide')}
-function stopStream(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}video.srcObject=null}
-async function getMedia(constraints){
- try{return await navigator.mediaDevices.getUserMedia(constraints)}catch(e){throw e}
+function stopStream(){if(stream){stream.getTracks().forEach(function(t){try{t.stop()}catch(e){}});stream=null}video.srcObject=null}
+function isUltra(label){return /ultra|0\.5|wide angle|ultra wide|ультра|широк/i.test(label||'')}
+function isFront(label){return /front|user|facetime|передн|фронт/i.test(label||'')}
+function isBack(label){return /back|rear|environment|world|задн|основн/i.test(label||'')}
+function isTele(label){return /tele|2x|3x|телефото|telephoto/i.test(label||'')}
+async function loadDevices(){
+ try{devices=(await navigator.mediaDevices.enumerateDevices()).filter(function(x){return x.kind==='videoinput'})}catch(e){devices=[]}
+ renderDevices();renderZoom()
+}
+function prettyDevice(d,i){
+ var l=d.label||'';
+ if(isUltra(l))return '0.5× · '+(l||('Камера '+(i+1)));
+ if(isTele(l))return 'Tele · '+(l||('Камера '+(i+1)));
+ if(isFront(l))return 'Фронтальная · '+(l||('Камера '+(i+1)));
+ if(isBack(l))return 'Задняя · '+(l||('Камера '+(i+1)));
+ return l||('Камера '+(i+1))
+}
+function renderDevices(){
+ var box=qs('#deviceList');box.innerHTML='';
+ qs('#cameraStatus').textContent=currentLabel?('Сейчас: '+currentLabel):('Режим: '+(facing==='user'?'фронтальная':'задняя'));
+ if(!devices.length){var n=document.createElement('button');n.className='device';n.disabled=true;n.textContent='Сначала разреши камеру';box.appendChild(n);return}
+ devices.forEach(function(d,i){
+  var b=document.createElement('button');b.className='device'+(d.deviceId===deviceId?' active':'');
+  b.textContent=prettyDevice(d,i);
+  b.onclick=async function(){
+   var label=d.label||'';var guess=isFront(label)?'user':(isBack(label)||isUltra(label)||isTele(label)?'environment':facing);
+   var ok=await startCamera({deviceId:d.deviceId,facing:guess});
+   if(ok)qs('#sheetBack').classList.remove('open')
+  };
+  box.appendChild(b)
+ })
+}
+function currentTrack(){return stream&&stream.getVideoTracks&&stream.getVideoTracks()[0]}
+function renderZoom(){
+ var row=qs('#zoomRow');row.innerHTML='';var tr=currentTrack();if(!tr||!tr.getCapabilities)return;
+ var caps={};try{caps=tr.getCapabilities()}catch(e){}
+ if(!caps.zoom)return;
+ var min=Number(caps.zoom.min),max=Number(caps.zoom.max),step=Number(caps.zoom.step||.1),vals=[min,.5,1,2,3,max].filter(function(v){return isFinite(v)&&v>=min-.001&&v<=max+.001});
+ vals=vals.filter(function(v,i,a){return a.findIndex(function(x){return Math.abs(x-v)<.05})===i}).sort(function(a,b){return a-b});
+ var settings={};try{settings=tr.getSettings()}catch(e){}
+ vals.forEach(function(v){
+  var b=document.createElement('button');b.className='zoomBtn'+(Math.abs(Number(settings.zoom||1)-v)<.08?' active':'');b.textContent=(Math.round(v*10)/10)+'×';
+  b.onclick=async function(){try{await tr.applyConstraints({advanced:[{zoom:v}]});renderZoom();toast('Зум '+(Math.round(v*10)/10)+'×')}catch(e){toast('Этот зум Safari не поддерживает')}};
+  row.appendChild(b)
+ })
+}
+async function gum(vc,withAudio){
+ return await navigator.mediaDevices.getUserMedia({video:vc,audio:withAudio?{echoCancellation:true,noiseSuppression:true}:false})
 }
 async function startCamera(options){
  options=options||{};
  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){camText('Открой сайт в Safari по HTTPS');return false}
- var vc=options.deviceId?{deviceId:{exact:options.deviceId},width:{ideal:1920},height:{ideal:1080}}:{facingMode:{ideal:options.facing||facing},width:{ideal:1920},height:{ideal:1080}};
+ var targetFacing=options.facing||facing;
+ var vc=options.deviceId?{deviceId:{exact:options.deviceId},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30}}:{facingMode:{exact:targetFacing},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30}};
+ camText('Подключаем камеру…');
+ stopStream();
  var fresh=null,firstError=null;
- try{
-  fresh=await getMedia({video:vc,audio:{echoCancellation:true,noiseSuppression:true}})
- }catch(e){
+ try{fresh=await gum(vc,true)}
+ catch(e){
   firstError=e;
-  try{fresh=await getMedia({video:vc,audio:false});toast('Видео включено, микрофон сейчас недоступен')}catch(e2){
-   if(location.protocol!=='https:'&&location.hostname!=='localhost')camText('Для камеры нужна HTTPS-ссылка');
-   else if((e2&&e2.name==='NotAllowedError')||(firstError&&firstError.name==='NotAllowedError'))camText('Разреши доступ к камере в Safari');
-   else if((e2&&e2.name==='NotReadableError')||(firstError&&firstError.name==='NotReadableError'))camText('Камера занята другим приложением');
-   else camText('Камера недоступна');
-   return false
+  if(!options.deviceId){
+   try{vc={facingMode:{ideal:targetFacing},width:{ideal:1920},height:{ideal:1080},frameRate:{ideal:30}};fresh=await gum(vc,true)}catch(ei){firstError=ei}
+  }
+  if(!fresh){
+   try{fresh=await gum(vc,false);toast('Видео включено, микрофон сейчас недоступен')}catch(e2){
+    if(location.protocol!=='https:'&&location.hostname!=='localhost')camText('Для камеры нужна HTTPS-ссылка');
+    else if((e2&&e2.name==='NotAllowedError')||(firstError&&firstError.name==='NotAllowedError'))camText('Разреши камеру: Safari → aA → Настройки сайта → Камера → Разрешить');
+    else if((e2&&e2.name==='NotReadableError')||(firstError&&firstError.name==='NotReadableError'))camText('Камера занята другим приложением');
+    else camText('Не удалось открыть этот объектив');
+    return false
+   }
   }
  }
- var old=stream;stream=fresh;video.srcObject=fresh;
+ stream=fresh;video.srcObject=fresh;
  try{await video.play()}catch(e){}
- camReady();if(old)old.getTracks().forEach(function(t){t.stop()});
- var vt=fresh.getVideoTracks()[0],at=fresh.getAudioTracks()[0];
- if(vt){var s=vt.getSettings();deviceId=s.deviceId||options.deviceId||null;facing=s.facingMode||facing;vt.enabled=camOn}
+ var vt=currentTrack(),at=fresh.getAudioTracks()[0],s={};
+ if(vt){try{s=vt.getSettings()}catch(e){};deviceId=s.deviceId||options.deviceId||null;facing=s.facingMode||targetFacing;vt.enabled=camOn}
  if(at)at.enabled=micOn;
- pip.classList.toggle('rear',facing==='environment');
- await loadDevices();return true
+ await loadDevices();
+ var active=devices.find(function(d){return d.deviceId===deviceId});currentLabel=(active&&active.label)||((facing==='user')?'Фронтальная камера':'Задняя камера');
+ pip.classList.toggle('rear',facing!=='user');camReady();renderDevices();renderZoom();return true
 }
-async function loadDevices(){
- try{devices=(await navigator.mediaDevices.enumerateDevices()).filter(function(x){return x.kind==='videoinput'})}catch(e){devices=[]}
- renderDevices()
-}
-function isUltra(label){return /ultra|0\.5|wide angle|ультра|широк/i.test(label||'')}
-function renderDevices(){
- var box=qs('#deviceList');box.innerHTML='';
- if(!devices.length){var n=document.createElement('button');n.className='device';n.disabled=true;n.textContent='Сначала разреши камеру';box.appendChild(n);return}
- devices.forEach(function(d,i){
-  var b=document.createElement('button');b.className='device'+(d.deviceId===deviceId?' active':'');
-  b.textContent=(isUltra(d.label)?'0.5× · ':'')+(d.label||('Камера '+(i+1)));
-  b.onclick=async function(){await startCamera({deviceId:d.deviceId});qs('#sheetBack').classList.remove('open')};
-  box.appendChild(b)
- })
+async function switchCamera(){
+ await loadDevices();
+ var want=facing==='user'?'environment':'user';
+ var candidates=devices.filter(function(d){return want==='user'?isFront(d.label):(isBack(d.label)||isUltra(d.label)||isTele(d.label))});
+ var chosen=null;
+ if(candidates.length){
+  if(want==='environment'){
+   chosen=candidates.find(function(d){return isBack(d.label)&&!isUltra(d.label)&&!isTele(d.label)})||candidates[0]
+  }else chosen=candidates[0]
+ }
+ var ok=chosen?await startCamera({deviceId:chosen.deviceId,facing:want}):await startCamera({facing:want});
+ if(ok)toast(want==='user'?'Фронтальная камера':'Задняя камера')
 }
 
 qs('#start').onclick=function(){
@@ -273,8 +341,8 @@ qs('#next').onclick=function(){try{speechSynthesis.cancel()}catch(e){}setBot(bot
 qs('#report').onclick=function(){toast('Жалоба отправлена');setTimeout(function(){setBot(botIndex+1,true)},350)};
 qs('#mute').onclick=function(){micOn=!micOn;if(stream)stream.getAudioTracks().forEach(function(t){t.enabled=micOn});this.classList.toggle('off',!micOn);toast(micOn?'Микрофон включён':'Микрофон выключен')};
 qs('#camera').onclick=async function(){camOn=!camOn;if(!stream&&camOn)await startCamera({facing:facing});if(stream)stream.getVideoTracks().forEach(function(t){t.enabled=camOn});this.classList.toggle('off',!camOn);if(!camOn)camText('Камера выключена');else if(stream)camReady()};
-qs('#switch').onclick=async function(){facing=facing==='user'?'environment':'user';var ok=await startCamera({facing:facing});if(ok)toast(facing==='user'?'Фронтальная камера':'Задняя камера')};
-qs('#lens').onclick=function(){loadDevices();qs('#sheetBack').classList.add('open')};
+qs('#switch').onclick=switchCamera;
+qs('#lens').onclick=async function(){await loadDevices();qs('#sheetBack').classList.add('open')};
 qs('#closeSheet').onclick=function(){qs('#sheetBack').classList.remove('open')};
 qs('#sheetBack').onclick=function(e){if(e.target===this)this.classList.remove('open')};
 qs('#chatToggle').onclick=function(){qs('#chat').classList.toggle('open');if(qs('#chat').classList.contains('open'))qs('#chatInput').focus()};
