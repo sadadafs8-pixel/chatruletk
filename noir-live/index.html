@@ -53,9 +53,12 @@ button{color:inherit;cursor:pointer}
 @keyframes talk{to{height:17px;width:31px}}
 .bot2{--glow:rgba(117,59,56,.56);--b1:#251515;--skin1:#d1a17f;--skin2:#99634e;--hair:#171311;--shirt1:#251818;--shirt2:#090707;--lip:#7f4145}
 .bot3{--glow:rgba(54,76,106,.58);--b1:#121b2a;--skin1:#c79a7e;--skin2:#94634e;--hair:#302622;--shirt1:#151b26;--shirt2:#080b10;--lip:#75474c}
-.peerPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 34%;z-index:2;opacity:0;transform:scale(1.025);filter:saturate(.92) contrast(1.03) brightness(.92);transition:opacity .22s ease;animation:photoFloat 7s ease-in-out infinite alternate}
-.scene.photo-ok .peerPhoto{opacity:1}
-.scene:not(.photo-ok){background:radial-gradient(circle at 50% 32%,rgba(223,189,121,.12),transparent 28%),#080808}
+.peerVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:2;background:#080808;opacity:0;transition:opacity .22s ease;filter:saturate(.95) contrast(1.02) brightness(.94)}
+.scene.video-ok .peerVideo{opacity:1}
+.peerPhoto{display:none}
+.scene.video-ok .person{display:none}
+.scene:not(.video-ok){background:radial-gradient(circle at 50% 32%,rgba(223,189,121,.12),transparent 28%),#080808}
+.demoTag{font-size:9px;letter-spacing:.12em;color:#8b857d;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:4px 7px;margin-left:3px}
 @keyframes photoFloat{to{transform:scale(1.055) translateY(-.8%)}}
 .cameraNoise{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;mix-blend-mode:soft-light;background-image:radial-gradient(rgba(255,255,255,.25) .45px,transparent .55px);background-size:3px 3px}
 .cameraStatus{font-size:12px;color:#9b958d;margin:0 2px 8px}
@@ -144,7 +147,7 @@ button{color:inherit;cursor:pointer}
 <section id="room" class="screen room">
   <div class="peerStage">
     <div id="scene" class="scene">
-      <img id="peerPhoto" class="peerPhoto" alt="" referrerpolicy="no-referrer">
+      <video id="peerVideo" class="peerVideo" playsinline autoplay muted loop preload="auto"></video>
       <div class="cameraNoise"></div>
       <div class="person">
         <div class="body"></div><div class="neck"></div><div class="head"></div><div class="hair"></div>
@@ -156,7 +159,7 @@ button{color:inherit;cursor:pointer}
   </div>
 
   <div class="topbar">
-    <div class="peerPill"><span class="live"></span><span id="botName">Mila</span></div>
+    <div class="peerPill"><span class="live"></span><span id="botName">Mila</span><span class="demoTag">DEMO</span></div>
     <button id="report" class="smallBtn" type="button" aria-label="Жалоба">
       <svg viewBox="0 0 24 24"><path d="M6 21V4m0 1h11l-2 4 2 4H6"/></svg>
     </button>
@@ -218,14 +221,14 @@ var toastTimer;
 function toast(t){var e=qs('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){e.classList.remove('show')},1800)}
 
 var femaleBots=[
- {name:'Carrie',cls:'',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Carrie_headshot.png',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
- {name:'Mary',cls:'bot2',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Mary_headshot.png',intro:'Привет. Как проходит твой вечер?',replies:['Да, сообщение вижу.','Расскажи что-нибудь о себе.','А ты часто заходишь в видеочаты?','Хм, интересно :)']},
- {name:'Sherry',cls:'bot3',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Sherry_headshot.png',intro:'Привет 👋',replies:['Слушаю тебя.','Что сегодня делал?','Давай ещё немного поболтаем.','Окей :)']}
+ {name:'Mila',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-portrait-of-an-influencer-talking-to-the-camera-42323-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
+ {name:'Eva',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-girl-recording-a-video-on-a-background-of-cereal-boxes-42316-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Привет 👋',replies:['Как день прошёл?','Поняла :)','Расскажи ещё.','Прикольно.']},
+ {name:'Sofia',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-happy-girl-posing-in-front-of-the-camera-42319-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-female.mp4',intro:'Хей!',replies:['Ага :)','Что ещё?','Интересно.','Продолжай.']}
 ];
 var maleBots=[
- {name:'Barry',cls:'',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Barry_headshot.png',intro:'Привет!',replies:['Как настроение?','Рассказывай.','Понял :)','Чем занимаешься?']},
- {name:'Gary',cls:'bot2',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Gary_headshot.png',intro:'Здарова 👋',replies:['Нормально :)','А ты?','Интересно.','Что ещё?']},
- {name:'Larry',cls:'bot3',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Larry_headshot.png',intro:'Привет!',replies:['Слушаю.','Прикольно.','Понял тебя.','Продолжай.']}
+ {name:'Max',cls:'',video:'https://assets.mixkit.co/videos/preview/mixkit-youtuber-recording-himself-41289-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-male.mp4',intro:'Привет!',replies:['Как настроение?','Рассказывай.','Понял :)','Чем занимаешься?']},
+ {name:'Leo',cls:'bot2',video:'https://assets.mixkit.co/videos/preview/mixkit-face-of-a-vlogger-speaking-to-the-camera-41290-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-male.mp4',intro:'Здарова 👋',replies:['Нормально :)','А ты?','Интересно.','Что ещё?']},
+ {name:'Dan',cls:'bot3',video:'https://assets.mixkit.co/videos/preview/mixkit-youtuber-filming-with-a-camera-on-a-tripod-41291-large.mp4',fallbackVideo:'https://raw.githubusercontent.com/intel-iot-devkit/sample-videos/master/head-pose-face-detection-male.mp4',intro:'Хей!',replies:['Слушаю.','Прикольно.','Понял тебя.','Продолжай.']}
 ];
 var bots=femaleBots.slice();
 function refreshBotPool(){
@@ -250,19 +253,46 @@ function speak(text){
 }
 function setBot(i,voice){
  botIndex=(i+bots.length)%bots.length;current=bots[botIndex];
- var scene=qs('#scene'),photo=qs('#peerPhoto');
- qs('#botName').textContent=current.name;scene.className='scene '+current.cls;
- scene.classList.remove('photo-ok');
- photo.onload=function(){scene.classList.add('photo-ok')};
- photo.onerror=function(){scene.classList.remove('photo-ok');photo.style.opacity='0';toast('Фото не загрузилось')};
- photo.src=current.img;
- qs('#messages').innerHTML='';addMsg(current.intro,'bot');if(voice!==false)speak(current.intro)
+ var scene=qs('#scene'),pv=qs('#peerVideo');
+ qs('#botName').textContent=current.name;
+ scene.className='scene '+current.cls;
+ scene.classList.remove('video-ok');
+ try{pv.pause()}catch(e){}
+ pv.removeAttribute('src');pv.load();
+ var triedFallback=false;
+ function loadSrc(src){
+   pv.src=src;pv.load();
+ }
+ pv.onloadedmetadata=function(){
+   try{
+     if(isFinite(pv.duration)&&pv.duration>3) pv.currentTime=Math.random()*Math.max(1,pv.duration-2);
+     pv.playbackRate=.96+Math.random()*.08;
+   }catch(e){}
+ };
+ pv.oncanplay=function(){
+   scene.classList.add('video-ok');
+   pv.play().catch(function(){});
+ };
+ pv.onerror=function(){
+   if(!triedFallback){
+     triedFallback=true;
+     loadSrc(current.fallbackVideo);
+   }else{
+     scene.classList.remove('video-ok');
+     toast('Плохое соединение');
+     setTimeout(function(){findNextBot(botIndex+1,false)},700);
+   }
+ };
+ loadSrc(current.video);
+ qs('#messages').innerHTML='';addMsg(current.intro,'bot');
 }
 setBot(0,false);
 
 var searchTimer=null;
 function findNextBot(nextIndex,voice){
  var o=qs('#searchOverlay');
+ var title=o.querySelector('.searchTitle');
+ title.textContent='Ищем собеседника…';
  o.classList.add('show');
  try{speechSynthesis.cancel()}catch(e){}
  clearTimeout(searchTimer);
