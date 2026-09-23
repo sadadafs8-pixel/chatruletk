@@ -37,7 +37,7 @@ button{color:inherit;cursor:pointer}
 .scene{position:absolute;inset:0;overflow:hidden}
 .scene::before{content:"";position:absolute;inset:-12%;background:radial-gradient(circle at 50% 25%,var(--glow,rgba(126,83,56,.55)),transparent 34%),linear-gradient(180deg,var(--b1,#221811),var(--b2,#0a0807) 63%,#050505);animation:ambient 5s ease-in-out infinite alternate}
 @keyframes ambient{to{transform:scale(1.04);filter:brightness(1.08)}}
-.person{position:absolute;left:50%;top:50%;width:min(73vw,430px);height:min(70vh,660px);transform:translate(-50%,-45%);filter:drop-shadow(0 38px 55px rgba(0,0,0,.45));animation:breathe 3s ease-in-out infinite}
+.person{display:none}
 @keyframes breathe{50%{transform:translate(-50%,-46%) scale(1.008)}}
 .body{position:absolute;left:50%;bottom:-5%;transform:translateX(-50%);width:78%;height:42%;border-radius:50% 50% 12% 12%;background:linear-gradient(180deg,var(--shirt1,#191919),var(--shirt2,#080808))}
 .neck{position:absolute;left:50%;bottom:30%;transform:translateX(-50%);width:23%;height:18%;border-radius:34%;background:linear-gradient(90deg,var(--skin2,#ad735d),var(--skin1,#d19b7e),var(--skin2,#ad735d))}
@@ -55,7 +55,7 @@ button{color:inherit;cursor:pointer}
 .bot3{--glow:rgba(54,76,106,.58);--b1:#121b2a;--skin1:#c79a7e;--skin2:#94634e;--hair:#302622;--shirt1:#151b26;--shirt2:#080b10;--lip:#75474c}
 .peerPhoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 34%;z-index:2;opacity:0;transform:scale(1.025);filter:saturate(.92) contrast(1.03) brightness(.92);transition:opacity .22s ease;animation:photoFloat 7s ease-in-out infinite alternate}
 .scene.photo-ok .peerPhoto{opacity:1}
-.scene.photo-ok .person{opacity:0}
+.scene:not(.photo-ok){background:radial-gradient(circle at 50% 32%,rgba(223,189,121,.12),transparent 28%),#080808}
 @keyframes photoFloat{to{transform:scale(1.055) translateY(-.8%)}}
 .cameraNoise{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;mix-blend-mode:soft-light;background-image:radial-gradient(rgba(255,255,255,.25) .45px,transparent .55px);background-size:3px 3px}
 .cameraStatus{font-size:12px;color:#9b958d;margin:0 2px 8px}
@@ -203,20 +203,14 @@ var toastTimer;
 function toast(t){var e=qs('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){e.classList.remove('show')},1800)}
 
 var femaleBots=[
- {name:'Mila',cls:'',img:'https://thispersonnotexist.org/static/badge/F_seed41470.webp',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
- {name:'Sofia',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/F_seed49125.webp',intro:'Привет. Как проходит твой вечер?',replies:['Да, сообщение вижу.','Расскажи что-нибудь о себе.','А ты часто заходишь в видеочаты?','Хм, интересно :)']},
- {name:'Nora',cls:'bot3',img:'https://thispersonnotexist.org/static/badge/F_seed17193.webp',intro:'Привет 👋',replies:['Слушаю тебя.','Что сегодня делал?','Давай ещё немного поболтаем.','Окей :)']},
- {name:'Alina',cls:'',img:'https://thispersonnotexist.org/static/badge/F_seed2926.webp',intro:'Привет :)',replies:['Как у тебя настроение?','Прикольно.','А откуда ты?','Что любишь делать в свободное время?']},
- {name:'Eva',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/F_seed2755.webp',intro:'Хей 👋',replies:['Ага :)','Расскажешь подробнее?','Серьёзно?','О, это интересно.']},
- {name:'Lina',cls:'bot3',img:'https://thispersonnotexist.org/static/badge/F_seed34718.webp',intro:'Привет!',replies:['Как день прошёл?','Ясно :)','Продолжай.','Что ещё расскажешь?']},
- {name:'Maya',cls:'',img:'https://thispersonnotexist.org/static/badge/F_seed17045.webp',intro:'Привет :)',replies:['Мило.','А что тебе нравится?','Поняла.','Хорошо :)']},
- {name:'Kate',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/F_seed41948.webp',intro:'Хей!',replies:['Прикольно :)','Что дальше?','Ага.','Расскажи ещё.']}
+ {name:'Carrie',cls:'',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Carrie_headshot.png',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
+ {name:'Mary',cls:'bot2',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Mary_headshot.png',intro:'Привет. Как проходит твой вечер?',replies:['Да, сообщение вижу.','Расскажи что-нибудь о себе.','А ты часто заходишь в видеочаты?','Хм, интересно :)']},
+ {name:'Sherry',cls:'bot3',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Sherry_headshot.png',intro:'Привет 👋',replies:['Слушаю тебя.','Что сегодня делал?','Давай ещё немного поболтаем.','Окей :)']}
 ];
 var maleBots=[
- {name:'Alex',cls:'',img:'https://thispersonnotexist.org/static/badge/M_seed36763.webp',intro:'Привет!',replies:['Как настроение?','Рассказывай.','Понял :)','Чем занимаешься?']},
- {name:'Max',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/M_seed9946.webp',intro:'Здарова 👋',replies:['Нормально :)','А ты?','Интересно.','Что ещё?']},
- {name:'Leo',cls:'bot3',img:'https://thispersonnotexist.org/static/badge/M_seed3034.webp',intro:'Привет!',replies:['Слушаю.','Прикольно.','Понял тебя.','Продолжай.']},
- {name:'Dan',cls:'',img:'https://thispersonnotexist.org/static/badge/M_seed2973.webp',intro:'Хей!',replies:['Как дела?','Ага.','Расскажи ещё.','Хорошо :)']}
+ {name:'Barry',cls:'',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Barry_headshot.png',intro:'Привет!',replies:['Как настроение?','Рассказывай.','Понял :)','Чем занимаешься?']},
+ {name:'Gary',cls:'bot2',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Gary_headshot.png',intro:'Здарова 👋',replies:['Нормально :)','А ты?','Интересно.','Что ещё?']},
+ {name:'Larry',cls:'bot3',img:'https://raw.githubusercontent.com/hevnsnt/norecognition/main/images/personas/Larry_headshot.png',intro:'Привет!',replies:['Слушаю.','Прикольно.','Понял тебя.','Продолжай.']}
 ];
 var bots=femaleBots.slice();
 function refreshBotPool(){
@@ -245,8 +239,8 @@ function setBot(i,voice){
  qs('#botName').textContent=current.name;scene.className='scene '+current.cls;
  scene.classList.remove('photo-ok');
  photo.onload=function(){scene.classList.add('photo-ok')};
- photo.onerror=function(){scene.classList.remove('photo-ok');toast('Не удалось загрузить лицо — переключаю бота')};
- photo.src=current.img+'?v='+botIndex;
+ photo.onerror=function(){scene.classList.remove('photo-ok');photo.style.opacity='0';toast('Фото не загрузилось')};
+ photo.src=current.img;
  qs('#messages').innerHTML='';addMsg(current.intro,'bot');if(voice!==false)speak(current.intro)
 }
 setBot(0,false);
