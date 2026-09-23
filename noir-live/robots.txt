@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://raw.githack.com/sadadafs8-pixel/chatruletk/noir-live-demo/noir-live/sitemap.xml
