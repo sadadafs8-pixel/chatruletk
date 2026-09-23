@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#050505">
+<title>NOIR</title>
+<style>
+:root{--bg:#050505;--panel:#101010;--line:rgba(255,255,255,.12);--text:#f5f1e9;--muted:#8b857d;--gold:#dfbd79;--gold2:#b68a4d;--danger:#6f2427}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,Arial,sans-serif;overflow:hidden}
+button,input{font:inherit}
+button{color:inherit;cursor:pointer}
+.screen{position:fixed;inset:0;display:none}
+.screen.active{display:block}
+
+/* ENTRY */
+.entry{display:flex;align-items:center;justify-content:center;padding:max(28px,env(safe-area-inset-top)) 22px max(24px,env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 28%,rgba(223,189,121,.10),transparent 34%),#050505}
+.entryBox{width:min(470px,100%)}
+.logo{text-align:center;font-weight:900;letter-spacing:.42em;font-size:25px;margin:0 0 58px 10px}
+.logoDot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 22px rgba(223,189,121,.65);margin-right:13px;vertical-align:3px}
+.label{font-size:12px;letter-spacing:.16em;color:#77716b;text-transform:uppercase;margin:0 0 12px 5px}
+.segment{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:31px}
+.pick{position:absolute;opacity:0;pointer-events:none}
+.pickLabel{height:68px;border:1px solid rgba(255,255,255,.14);border-radius:22px;background:#0d0d0d;color:#8f8981;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;text-align:center;touch-action:manipulation}
+.pick:checked+.pickLabel{background:#f2eadc;color:#111;border-color:#f2eadc;box-shadow:0 10px 34px rgba(223,189,121,.12)}
+.age{display:flex;align-items:center;gap:13px;margin:2px 7px 24px;color:#c9c2b9;font-size:16px}
+.age input{width:26px;height:26px;accent-color:var(--gold)}
+.start{width:100%;height:70px;border:0;border-radius:22px;background:linear-gradient(135deg,#efd9a9,#b88a4d);color:#17120c;font-size:20px;font-weight:900;box-shadow:0 18px 52px rgba(185,139,73,.20)}
+.start:active{transform:scale(.985)}
+.hint{text-align:center;color:#555049;font-size:11px;margin-top:15px}
+@media(max-height:730px){.logo{margin-bottom:34px}.segment{margin-bottom:18px}.pickLabel{height:58px}.start{height:60px}.age{margin-bottom:16px}}
+
+/* ROOM */
+.room{background:#080808;overflow:hidden}
+.peerStage{position:absolute;inset:0;overflow:hidden;background:#080808}
+.scene{position:absolute;inset:0;overflow:hidden}
+.scene::before{content:"";position:absolute;inset:-12%;background:radial-gradient(circle at 50% 25%,var(--glow,rgba(126,83,56,.55)),transparent 34%),linear-gradient(180deg,var(--b1,#221811),var(--b2,#0a0807) 63%,#050505);animation:ambient 5s ease-in-out infinite alternate}
+@keyframes ambient{to{transform:scale(1.04);filter:brightness(1.08)}}
+.person{position:absolute;left:50%;top:50%;width:min(73vw,430px);height:min(70vh,660px);transform:translate(-50%,-45%);filter:drop-shadow(0 38px 55px rgba(0,0,0,.45));animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{50%{transform:translate(-50%,-46%) scale(1.008)}}
+.body{position:absolute;left:50%;bottom:-5%;transform:translateX(-50%);width:78%;height:42%;border-radius:50% 50% 12% 12%;background:linear-gradient(180deg,var(--shirt1,#191919),var(--shirt2,#080808))}
+.neck{position:absolute;left:50%;bottom:30%;transform:translateX(-50%);width:23%;height:18%;border-radius:34%;background:linear-gradient(90deg,var(--skin2,#ad735d),var(--skin1,#d19b7e),var(--skin2,#ad735d))}
+.head{position:absolute;left:50%;bottom:42%;transform:translateX(-50%);width:47%;height:40%;border-radius:46% 46% 44% 44%/42% 42% 54% 54%;background:radial-gradient(circle at 44% 27%,rgba(255,255,255,.12),transparent 16%),linear-gradient(100deg,var(--skin2,#a86c57),var(--skin1,#d09b7e) 50%,var(--skin2,#a86c57))}
+.hair{position:absolute;left:50%;bottom:66%;transform:translateX(-50%);width:53%;height:21%;border-radius:50% 50% 27% 27%/70% 70% 30% 30%;background:var(--hair,#241b18)}
+.hair:after{content:"";position:absolute;right:-4%;top:33%;width:19%;height:165%;border-radius:50%;background:var(--hair,#241b18);transform:rotate(-8deg)}
+.eyes{position:absolute;left:50%;bottom:58%;transform:translateX(-50%);width:29%;display:flex;justify-content:space-between}
+.eye{width:22px;height:9px;border-radius:50%;background:#e7e1d8;position:relative;overflow:hidden}
+.eye:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:#201b17}
+.nose{position:absolute;left:50%;bottom:54%;width:2px;height:18px;background:rgba(80,45,34,.22);transform:translateX(-50%)}
+.mouth{position:absolute;left:50%;bottom:50%;transform:translateX(-50%);width:38px;height:7px;border-radius:50%;background:var(--lip,#7b4547)}
+.scene.talking .mouth{animation:talk .16s ease-in-out infinite alternate}
+@keyframes talk{to{height:17px;width:31px}}
+.bot2{--glow:rgba(117,59,56,.56);--b1:#251515;--skin1:#d1a17f;--skin2:#99634e;--hair:#171311;--shirt1:#251818;--shirt2:#090707;--lip:#7f4145}
+.bot3{--glow:rgba(54,76,106,.58);--b1:#121b2a;--skin1:#c79a7e;--skin2:#94634e;--hair:#302622;--shirt1:#151b26;--shirt2:#080b10;--lip:#75474c}
+.vignette{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.18),transparent 23%,transparent 62%,rgba(0,0,0,.86))}
+.topbar{position:absolute;z-index:20;top:calc(14px + env(safe-area-inset-top));left:max(15px,env(safe-area-inset-left));right:max(15px,env(safe-area-inset-right));display:flex;align-items:center;justify-content:space-between}
+.peerPill{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(8,8,8,.52);backdrop-filter:blur(16px);font-size:13px}
+.live{width:8px;height:8px;border-radius:50%;background:#53d077;box-shadow:0 0 10px rgba(83,208,119,.5)}
+.smallBtn{width:43px;height:43px;border-radius:14px;border:1px solid var(--line);background:rgba(8,8,8,.52);backdrop-filter:blur(16px);display:grid;place-items:center}
+.smallBtn svg,.ctl svg,.pipBtn svg,.send svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+/* PIP */
+.pip{position:absolute;z-index:30;right:15px;top:calc(72px + env(safe-area-inset-top));width:122px;height:163px;min-width:90px;min-height:120px;max-width:78vw;max-height:65vh;border:1px solid rgba(255,255,255,.20);border-radius:21px;overflow:hidden;background:#121212;box-shadow:0 22px 60px rgba(0,0,0,.50);touch-action:none}
+.pip video{width:100%;height:100%;object-fit:cover;background:#111;transform:scaleX(-1)}
+.pip.rear video{transform:none}
+.pipFallback{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:14px;background:radial-gradient(circle at 50% 28%,#30271e,#121212 58%,#090909);color:#a79e93;font-size:10px;line-height:1.35}
+.pipFallback.hide{display:none}
+.pipBtns{position:absolute;left:7px;top:7px;z-index:3;display:flex;gap:5px}
+.pipBtn{width:30px;height:30px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:rgba(5,5,5,.56);display:grid;place-items:center}
+.resize{position:absolute;right:0;bottom:0;width:42px;height:42px;z-index:5;touch-action:none}
+.resize:after{content:"";position:absolute;right:8px;bottom:8px;width:16px;height:16px;border-right:2px solid rgba(255,255,255,.78);border-bottom:2px solid rgba(255,255,255,.78)}
+.dragLine{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);width:36px;height:3px;border-radius:3px;background:rgba(255,255,255,.36)}
+
+/* controls */
+.controls{position:absolute;z-index:25;left:0;right:0;bottom:calc(17px + env(safe-area-inset-bottom));display:flex;justify-content:center;align-items:center;gap:8px;padding:0 11px}
+.ctl{width:52px;height:52px;border-radius:17px;border:1px solid rgba(255,255,255,.10);background:rgba(22,22,22,.78);backdrop-filter:blur(18px);display:grid;place-items:center}
+.ctl.off{background:#eee7db;color:#161616}
+.ctl.next{width:70px;border:0;background:linear-gradient(135deg,#efd9ae,#b98c50);color:#17120c}
+.ctl.end{background:rgba(106,31,34,.86);color:#ffdede}
+@media(max-width:390px){.controls{gap:6px}.ctl{width:48px;height:48px;border-radius:15px}.ctl.next{width:62px}}
+
+/* chat */
+.chat{position:absolute;z-index:40;left:12px;right:12px;bottom:calc(81px + env(safe-area-inset-bottom));height:min(43vh,390px);border:1px solid var(--line);border-radius:24px;background:rgba(10,10,10,.88);backdrop-filter:blur(24px);display:none;flex-direction:column;overflow:hidden}
+.chat.open{display:flex}
+.messages{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:9px}
+.bubble{max-width:78%;padding:10px 12px;border-radius:16px;font-size:13px;line-height:1.35}
+.bubble.bot{align-self:flex-start;background:#1b1b1b}
+.bubble.me{align-self:flex-end;background:#e7d4ad;color:#17120c}
+.composer{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.composer input{flex:1;min-width:0;height:44px;border:1px solid var(--line);border-radius:14px;background:#101010;color:white;padding:0 13px;outline:none}
+.send{width:44px;height:44px;border:0;border-radius:14px;background:#e2c180;color:#17120c;display:grid;place-items:center}
+
+/* sheet + toast */
+.sheetBack{position:absolute;inset:0;z-index:60;background:rgba(0,0,0,.55);display:none;align-items:flex-end}
+.sheetBack.open{display:flex}
+.sheet{width:100%;border-radius:26px 26px 0 0;background:#121212;border-top:1px solid var(--line);padding:14px 16px calc(18px + env(safe-area-inset-bottom))}
+.sheetTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.device{width:100%;text-align:left;border:1px solid var(--line);border-radius:15px;background:#0d0d0d;padding:14px;margin-top:8px}
+.device.active{border-color:rgba(223,189,121,.55);background:#17140f}
+.toast{position:fixed;z-index:100;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:rgba(20,20,20,.92);border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-size:12px;opacity:0;pointer-events:none;transition:.18s}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+</style>
+</head>
+<body>
+<section id="entry" class="screen entry active">
+  <div class="entryBox">
+    <div class="logo"><span class="logoDot"></span>NOIR</div>
+    <div class="label">Я</div>
+    <div class="segment">
+      <input class="pick" id="meM" type="radio" name="me" value="m"><label class="pickLabel" for="meM">Мужчина</label>
+      <input class="pick" id="meF" type="radio" name="me" value="f" checked><label class="pickLabel" for="meF">Женщина</label>
+      <input class="pick" id="meO" type="radio" name="me" value="o"><label class="pickLabel" for="meO">Другое</label>
+    </div>
+    <div class="label">Ищу</div>
+    <div class="segment">
+      <input class="pick" id="findF" type="radio" name="find" value="f" checked><label class="pickLabel" for="findF">Женщин</label>
+      <input class="pick" id="findM" type="radio" name="find" value="m"><label class="pickLabel" for="findM">Мужчин</label>
+      <input class="pick" id="findA" type="radio" name="find" value="a"><label class="pickLabel" for="findA">Всех</label>
+    </div>
+    <label class="age"><input id="age" type="checkbox" checked><span>Мне есть 18 лет</span></label>
+    <button id="start" class="start" type="button">Начать</button>
+    <div class="hint">Камера включится после разрешения Safari</div>
+  </div>
+</section>
+
+<section id="room" class="screen room">
+  <div class="peerStage">
+    <div id="scene" class="scene">
+      <div class="person">
+        <div class="body"></div><div class="neck"></div><div class="head"></div><div class="hair"></div>
+        <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+        <div class="nose"></div><div class="mouth"></div>
+      </div>
+    </div>
+    <div class="vignette"></div>
+  </div>
+
+  <div class="topbar">
+    <div class="peerPill"><span class="live"></span><span id="botName">Mila</span></div>
+    <button id="report" class="smallBtn" type="button" aria-label="Жалоба">
+      <svg viewBox="0 0 24 24"><path d="M6 21V4m0 1h11l-2 4 2 4H6"/></svg>
+    </button>
+  </div>
+
+  <div id="pip" class="pip">
+    <video id="selfVideo" playsinline autoplay muted></video>
+    <div id="pipFallback" class="pipFallback">Нажми «Начать» и разреши камеру</div>
+    <div class="pipBtns">
+      <button id="pipSize" class="pipBtn" type="button" aria-label="Размер">
+        <svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 21h5v-5M3 8l6-6M21 16l-6 6"/></svg>
+      </button>
+    </div>
+    <div id="resize" class="resize"></div>
+    <div class="dragLine"></div>
+  </div>
+
+  <div class="controls">
+    <button id="mute" class="ctl" type="button" aria-label="Микрофон"><svg viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Z"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></button>
+    <button id="camera" class="ctl" type="button" aria-label="Камера"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10 5-3v10l-5-3Z"/></svg></button>
+    <button id="switch" class="ctl" type="button" aria-label="Перевернуть"><svg viewBox="0 0 24 24"><path d="M7 7h10l-3-3M17 17H7l3 3"/></svg></button>
+    <button id="lens" class="ctl" type="button" aria-label="Объектив"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></button>
+    <button id="chatToggle" class="ctl" type="button" aria-label="Чат"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4Z"/></svg></button>
+    <button id="next" class="ctl next" type="button" aria-label="Следующий"><svg viewBox="0 0 24 24"><path d="M5 12h13M14 7l5 5-5 5"/></svg></button>
+    <button id="end" class="ctl end" type="button" aria-label="Выйти"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+  </div>
+
+  <div id="chat" class="chat">
+    <div id="messages" class="messages"></div>
+    <div class="composer"><input id="chatInput" placeholder="Сообщение…"><button id="send" class="send" type="button"><svg viewBox="0 0 24 24"><path d="m4 4 17 8-17 8 4-8Z"/></svg></button></div>
+  </div>
+
+  <div id="sheetBack" class="sheetBack">
+    <div class="sheet">
+      <div class="sheetTop"><b>Камеры</b><button id="closeSheet" class="smallBtn" type="button">×</button></div>
+      <div id="deviceList"></div>
+    </div>
+  </div>
+</section>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function(){
+'use strict';
+function qs(s){return document.querySelector(s)}
+function qsa(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function show(id){qsa('.screen').forEach(function(x){x.classList.toggle('active',x.id===id)})}
+var toastTimer;
+function toast(t){var e=qs('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){e.classList.remove('show')},1800)}
+
+var bots=[
+ {name:'Mila',cls:'',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
+ {name:'Sofia',cls:'bot2',intro:'Привет. Проверим, как работает чат?',replies:['Да, сообщение вижу.','Интерфейс почти не мешает разговору.','А ты бы пользовался такой рулеткой?','Окей, что ещё тестируем?']},
+ {name:'Nora',cls:'bot3',intro:'Hey. Камера включилась?',replies:['Если видишь себя в окне — камера работает.','Окно можно двигать и растягивать.','Объективы открываются круглой кнопкой.','Нажми Next и проверь следующего бота.']}
+];
+var botIndex=0,current=bots[0];
+function addMsg(text,who){var d=document.createElement('div');d.className='bubble '+who;d.textContent=text;qs('#messages').appendChild(d);qs('#messages').scrollTop=qs('#messages').scrollHeight}
+function speak(text){
+ if(!('speechSynthesis' in window))return;
+ try{
+  speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);u.lang='ru-RU';u.rate=.98;
+  u.onstart=function(){qs('#scene').classList.add('talking')};
+  var done=function(){qs('#scene').classList.remove('talking')};u.onend=done;u.onerror=done;
+  speechSynthesis.speak(u)
+ }catch(e){}
+}
+function setBot(i,voice){
+ botIndex=(i+bots.length)%bots.length;current=bots[botIndex];
+ qs('#botName').textContent=current.name;qs('#scene').className='scene '+current.cls;
+ qs('#messages').innerHTML='';addMsg(current.intro,'bot');if(voice!==false)speak(current.intro)
+}
+setBot(0,false);
+
+var stream=null,facing='user',micOn=true,camOn=true,devices=[],deviceId=null;
+var video=qs('#selfVideo'),fallback=qs('#pipFallback'),pip=qs('#pip');
+function camText(t){fallback.textContent=t;fallback.classList.remove('hide')}
+function camReady(){fallback.classList.add('hide')}
+function stopStream(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}video.srcObject=null}
+async function getMedia(constraints){
+ try{return await navigator.mediaDevices.getUserMedia(constraints)}catch(e){throw e}
+}
+async function startCamera(options){
+ options=options||{};
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){camText('Открой сайт в Safari по HTTPS');return false}
+ var vc=options.deviceId?{deviceId:{exact:options.deviceId},width:{ideal:1920},height:{ideal:1080}}:{facingMode:{ideal:options.facing||facing},width:{ideal:1920},height:{ideal:1080}};
+ var fresh=null,firstError=null;
+ try{
+  fresh=await getMedia({video:vc,audio:{echoCancellation:true,noiseSuppression:true}})
+ }catch(e){
+  firstError=e;
+  try{fresh=await getMedia({video:vc,audio:false});toast('Видео включено, микрофон сейчас недоступен')}catch(e2){
+   if(location.protocol!=='https:'&&location.hostname!=='localhost')camText('Для камеры нужна HTTPS-ссылка');
+   else if((e2&&e2.name==='NotAllowedError')||(firstError&&firstError.name==='NotAllowedError'))camText('Разреши доступ к камере в Safari');
+   else if((e2&&e2.name==='NotReadableError')||(firstError&&firstError.name==='NotReadableError'))camText('Камера занята другим приложением');
+   else camText('Камера недоступна');
+   return false
+  }
+ }
+ var old=stream;stream=fresh;video.srcObject=fresh;
+ try{await video.play()}catch(e){}
+ camReady();if(old)old.getTracks().forEach(function(t){t.stop()});
+ var vt=fresh.getVideoTracks()[0],at=fresh.getAudioTracks()[0];
+ if(vt){var s=vt.getSettings();deviceId=s.deviceId||options.deviceId||null;facing=s.facingMode||facing;vt.enabled=camOn}
+ if(at)at.enabled=micOn;
+ pip.classList.toggle('rear',facing==='environment');
+ await loadDevices();return true
+}
+async function loadDevices(){
+ try{devices=(await navigator.mediaDevices.enumerateDevices()).filter(function(x){return x.kind==='videoinput'})}catch(e){devices=[]}
+ renderDevices()
+}
+function isUltra(label){return /ultra|0\.5|wide angle|ультра|широк/i.test(label||'')}
+function renderDevices(){
+ var box=qs('#deviceList');box.innerHTML='';
+ if(!devices.length){var n=document.createElement('button');n.className='device';n.disabled=true;n.textContent='Сначала разреши камеру';box.appendChild(n);return}
+ devices.forEach(function(d,i){
+  var b=document.createElement('button');b.className='device'+(d.deviceId===deviceId?' active':'');
+  b.textContent=(isUltra(d.label)?'0.5× · ':'')+(d.label||('Камера '+(i+1)));
+  b.onclick=async function(){await startCamera({deviceId:d.deviceId});qs('#sheetBack').classList.remove('open')};
+  box.appendChild(b)
+ })
+}
+
+qs('#start').onclick=function(){
+ if(!qs('#age').checked){toast('Подтверди, что тебе есть 18');return}
+ show('room');setBot(botIndex,false);
+ startCamera({facing:facing}).then(function(ok){if(ok)setTimeout(function(){speak(current.intro)},150)});
+};
+qs('#end').onclick=function(){stopStream();qs('#chat').classList.remove('open');show('entry')};
+qs('#next').onclick=function(){try{speechSynthesis.cancel()}catch(e){}setBot(botIndex+1,true);toast('Следующий')};
+qs('#report').onclick=function(){toast('Жалоба отправлена');setTimeout(function(){setBot(botIndex+1,true)},350)};
+qs('#mute').onclick=function(){micOn=!micOn;if(stream)stream.getAudioTracks().forEach(function(t){t.enabled=micOn});this.classList.toggle('off',!micOn);toast(micOn?'Микрофон включён':'Микрофон выключен')};
+qs('#camera').onclick=async function(){camOn=!camOn;if(!stream&&camOn)await startCamera({facing:facing});if(stream)stream.getVideoTracks().forEach(function(t){t.enabled=camOn});this.classList.toggle('off',!camOn);if(!camOn)camText('Камера выключена');else if(stream)camReady()};
+qs('#switch').onclick=async function(){facing=facing==='user'?'environment':'user';var ok=await startCamera({facing:facing});if(ok)toast(facing==='user'?'Фронтальная камера':'Задняя камера')};
+qs('#lens').onclick=function(){loadDevices();qs('#sheetBack').classList.add('open')};
+qs('#closeSheet').onclick=function(){qs('#sheetBack').classList.remove('open')};
+qs('#sheetBack').onclick=function(e){if(e.target===this)this.classList.remove('open')};
+qs('#chatToggle').onclick=function(){qs('#chat').classList.toggle('open');if(qs('#chat').classList.contains('open'))qs('#chatInput').focus()};
+function send(){
+ var input=qs('#chatInput'),t=input.value.trim();if(!t)return;addMsg(t,'me');input.value='';
+ var r=current.replies[Math.floor(Math.random()*current.replies.length)];
+ setTimeout(function(){addMsg(r,'bot');speak(r)},360)
+}
+qs('#send').onclick=send;qs('#chatInput').onkeydown=function(e){if(e.key==='Enter')send()};
+
+/* Drag + resize PIP */
+var drag=null,rs=null,preset=0,presets=[[112,150],[150,200],[205,273]];
+function clamp(){
+ var r=pip.getBoundingClientRect(),vw=innerWidth,vh=innerHeight;
+ var x=Math.max(8,Math.min(r.left,vw-r.width-8));
+ var y=Math.max(8,Math.min(r.top,vh-r.height-92));
+ pip.style.left=x+'px';pip.style.top=y+'px';pip.style.right='auto'
+}
+pip.addEventListener('pointerdown',function(e){
+ if(e.target.closest('button')||e.target===qs('#resize'))return;
+ var r=pip.getBoundingClientRect();drag={id:e.pointerId,dx:e.clientX-r.left,dy:e.clientY-r.top};pip.setPointerCapture(e.pointerId)
+});
+pip.addEventListener('pointermove',function(e){if(!drag||drag.id!==e.pointerId)return;pip.style.left=(e.clientX-drag.dx)+'px';pip.style.top=(e.clientY-drag.dy)+'px';pip.style.right='auto';clamp()});
+pip.addEventListener('pointerup',function(e){if(drag&&drag.id===e.pointerId)drag=null});
+qs('#resize').addEventListener('pointerdown',function(e){e.stopPropagation();var r=pip.getBoundingClientRect();rs={id:e.pointerId,x:e.clientX,w:r.width};this.setPointerCapture(e.pointerId)});
+qs('#resize').addEventListener('pointermove',function(e){if(!rs||rs.id!==e.pointerId)return;var w=Math.max(90,Math.min(rs.w+(e.clientX-rs.x),innerWidth*.78)),h=w*4/3;if(h>innerHeight*.65){h=innerHeight*.65;w=h*3/4}pip.style.width=w+'px';pip.style.height=h+'px';clamp()});
+qs('#resize').addEventListener('pointerup',function(e){if(rs&&rs.id===e.pointerId)rs=null});
+qs('#pipSize').onclick=function(e){e.stopPropagation();preset=(preset+1)%presets.length;pip.style.width=presets[preset][0]+'px';pip.style.height=presets[preset][1]+'px';clamp();toast('Размер камеры изменён')};
+window.addEventListener('resize',clamp);
+if(navigator.mediaDevices&&navigator.mediaDevices.addEventListener)navigator.mediaDevices.addEventListener('devicechange',loadDevices);
+})();
+</script>
+</body>
+</html>
