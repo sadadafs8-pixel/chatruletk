@@ -202,11 +202,31 @@ function show(id){qsa('.screen').forEach(function(x){x.classList.toggle('active'
 var toastTimer;
 function toast(t){var e=qs('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){e.classList.remove('show')},1800)}
 
-var bots=[
- {name:'Mila',cls:'',img:'https://api.samplefaces.com/face?width=900&height=1600&n=11',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
- {name:'Sofia',cls:'bot2',img:'https://api.samplefaces.com/face?width=900&height=1600&n=24',intro:'Привет. Проверим, как работает чат?',replies:['Да, сообщение вижу.','Интерфейс почти не мешает разговору.','А ты бы пользовался такой рулеткой?','Окей, что ещё тестируем?']},
- {name:'Nora',cls:'bot3',img:'https://api.samplefaces.com/face?width=900&height=1600&n=37',intro:'Hey. Камера включилась?',replies:['Если видишь себя в окне — камера работает.','Окно можно двигать и растягивать.','Объективы открываются круглой кнопкой.','Нажми Next и проверь следующего бота.']}
+var femaleBots=[
+ {name:'Mila',cls:'',img:'https://thispersonnotexist.org/static/badge/F_seed41470.webp',intro:'Привет :) Как настроение?',replies:['Расскажешь подробнее?','А что тебе обычно нравится делать вечером?','Интересно. Я слушаю :)','Давай про музыку или путешествия?']},
+ {name:'Sofia',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/F_seed49125.webp',intro:'Привет. Как проходит твой вечер?',replies:['Да, сообщение вижу.','Расскажи что-нибудь о себе.','А ты часто заходишь в видеочаты?','Хм, интересно :)']},
+ {name:'Nora',cls:'bot3',img:'https://thispersonnotexist.org/static/badge/F_seed17193.webp',intro:'Привет 👋',replies:['Слушаю тебя.','Что сегодня делал?','Давай ещё немного поболтаем.','Окей :)']},
+ {name:'Alina',cls:'',img:'https://thispersonnotexist.org/static/badge/F_seed2926.webp',intro:'Привет :)',replies:['Как у тебя настроение?','Прикольно.','А откуда ты?','Что любишь делать в свободное время?']},
+ {name:'Eva',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/F_seed2755.webp',intro:'Хей 👋',replies:['Ага :)','Расскажешь подробнее?','Серьёзно?','О, это интересно.']},
+ {name:'Lina',cls:'bot3',img:'https://thispersonnotexist.org/static/badge/F_seed34718.webp',intro:'Привет!',replies:['Как день прошёл?','Ясно :)','Продолжай.','Что ещё расскажешь?']},
+ {name:'Maya',cls:'',img:'https://thispersonnotexist.org/static/badge/F_seed17045.webp',intro:'Привет :)',replies:['Мило.','А что тебе нравится?','Поняла.','Хорошо :)']},
+ {name:'Kate',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/F_seed41948.webp',intro:'Хей!',replies:['Прикольно :)','Что дальше?','Ага.','Расскажи ещё.']}
 ];
+var maleBots=[
+ {name:'Alex',cls:'',img:'https://thispersonnotexist.org/static/badge/M_seed36763.webp',intro:'Привет!',replies:['Как настроение?','Рассказывай.','Понял :)','Чем занимаешься?']},
+ {name:'Max',cls:'bot2',img:'https://thispersonnotexist.org/static/badge/M_seed9946.webp',intro:'Здарова 👋',replies:['Нормально :)','А ты?','Интересно.','Что ещё?']},
+ {name:'Leo',cls:'bot3',img:'https://thispersonnotexist.org/static/badge/M_seed3034.webp',intro:'Привет!',replies:['Слушаю.','Прикольно.','Понял тебя.','Продолжай.']},
+ {name:'Dan',cls:'',img:'https://thispersonnotexist.org/static/badge/M_seed2973.webp',intro:'Хей!',replies:['Как дела?','Ага.','Расскажи ещё.','Хорошо :)']}
+];
+var bots=femaleBots.slice();
+function refreshBotPool(){
+ var el=document.querySelector('input[name="find"]:checked');
+ var v=el?el.value:'f';
+ if(v==='m') bots=maleBots.slice();
+ else if(v==='a') bots=femaleBots.concat(maleBots).sort(function(){return Math.random()-.5});
+ else bots=femaleBots.slice();
+ botIndex=0;current=bots[0];
+}
 var botIndex=0,current=bots[0];
 function addMsg(text,who){var d=document.createElement('div');d.className='bubble '+who;d.textContent=text;qs('#messages').appendChild(d);qs('#messages').scrollTop=qs('#messages').scrollHeight}
 function speak(text){
@@ -225,8 +245,8 @@ function setBot(i,voice){
  qs('#botName').textContent=current.name;scene.className='scene '+current.cls;
  scene.classList.remove('photo-ok');
  photo.onload=function(){scene.classList.add('photo-ok')};
- photo.onerror=function(){scene.classList.remove('photo-ok')};
- photo.src=current.img+'&session='+botIndex;
+ photo.onerror=function(){scene.classList.remove('photo-ok');toast('Не удалось загрузить лицо — переключаю бота')};
+ photo.src=current.img+'?v='+botIndex;
  qs('#messages').innerHTML='';addMsg(current.intro,'bot');if(voice!==false)speak(current.intro)
 }
 setBot(0,false);
@@ -333,7 +353,8 @@ async function switchCamera(){
 
 qs('#start').onclick=function(){
  if(!qs('#age').checked){toast('Подтверди, что тебе есть 18');return}
- show('room');setBot(botIndex,false);
+ refreshBotPool();
+ show('room');setBot(0,false);
  startCamera({facing:facing}).then(function(ok){if(ok)setTimeout(function(){speak(current.intro)},150)});
 };
 qs('#end').onclick=function(){stopStream();qs('#chat').classList.remove('open');show('entry')};
